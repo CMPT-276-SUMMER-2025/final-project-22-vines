@@ -18,4 +18,5 @@ app.get('/', (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Server is listening on http://localhost:${PORT}`);
+  console.log("Edamam APP ID:", process.env.EDAMAM_APP_ID);
 });
