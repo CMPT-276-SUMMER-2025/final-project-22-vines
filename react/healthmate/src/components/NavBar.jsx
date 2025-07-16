@@ -19,7 +19,7 @@ function NavBar() {
             <div className="navbarLinks">
                 <NavBarButton destination={"dashboard"} buttonText={"Dashboard"}/>
                 <NavBarButton destination={"dashboard"} buttonText={"Log Food"}/>
-                <NavBarButton destination={"dashboard"} buttonText={"Analyze Meal"}/>
+                <NavBarButton destination={"analyzemeal"} buttonText={"Analyze Meal"}/>
                 <NavBarButton destination={"dashboard"} buttonText={"Track Exercise"}/>
                 <NavBarButton destination={""} buttonText={"Settings"}/>
             </div>
