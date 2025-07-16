@@ -5,8 +5,10 @@ function Dashboard() {
         <>
             <NavBar/>
             <div className="dashboard">
-                <p>hi</p>
-        </div>
+                <div className="loggedMeals"></div>
+                <div className="nutritionInfo"></div>
+                <div className="trackedExercises"></div>
+            </div>
         </> 
     )
 }

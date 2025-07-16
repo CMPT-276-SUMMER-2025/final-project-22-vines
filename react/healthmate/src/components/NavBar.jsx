@@ -1,5 +1,15 @@
 import {Link} from "react-router-dom";
 
+function NavBarButton({destination, buttonText}) {
+    return (
+        <Link to={`/${destination}`}>
+            <button type="button">
+                {buttonText}
+            </button>
+        </Link>
+    )
+}
+
 function NavBar() {
     return (
         <nav className="navbar">
@@ -7,10 +17,11 @@ function NavBar() {
                 <Link to="/">Logo</Link>
             </div>
             <div className="navbarLinks">
-                <Link to="/dashboard">Dashboard</Link>
-                <Link to="/dashboard">Log Food</Link>
-                <Link to="/dashboard">Analyze Meal</Link>
-                <Link to="/dashboard">Track Exercise</Link>
+                <NavBarButton destination={"dashboard"} buttonText={"Dashboard"}/>
+                <NavBarButton destination={"dashboard"} buttonText={"Log Food"}/>
+                <NavBarButton destination={"dashboard"} buttonText={"Analyze Meal"}/>
+                <NavBarButton destination={"dashboard"} buttonText={"Track Exercise"}/>
+                <NavBarButton destination={""} buttonText={"Settings"}/>
             </div>
         </nav>
     )
