@@ -1,12 +1,11 @@
-
-import axios from 'axios';
+const axios = require('axios');
 
 const EDAMAM_APP_ID = process.env.EDAMAM_APP_ID;
 const EDAMAM_API_KEY = process.env.EDAMAM_API_KEY;
 const BASE_URL = 'https://api.edamam.com/api/nutrition-details';
 
 // 1. Analyze full meal
-export async function analyzeMeal(recipe) {
+async function analyzeMeal(recipe) {
   try {
     const response = await axios.post(
       `${BASE_URL}?app_id=${EDAMAM_APP_ID}&app_key=${EDAMAM_API_KEY}`,
@@ -21,12 +20,12 @@ export async function analyzeMeal(recipe) {
 }
 
 // 2. Filter labels (e.g., vegan, keto)
-export function filterDietLabels(nutritionData) {
+function filterDietLabels(nutritionData) {
   return nutritionData.dietLabels || [];
 }
 
 // 3. Generate tips based on calories/labels
-export function getNutritionTips(nutritionData) {
+function getNutritionTips(nutritionData) {
   const tips = [];
   if (nutritionData.calories > 700) {
     tips.push('This meal is high in calories. Consider reducing portion size.');
@@ -39,3 +38,10 @@ export function getNutritionTips(nutritionData) {
   }
   return tips;
 }
+
+//Export functions for use in controller
+module.exports = {
+  analyzeMeal,
+  filterDietLabels,
+  getNutritionTips
+};
