@@ -1,4 +1,5 @@
 import {Link} from "react-router-dom";
+import {NavLink} from "react-router-dom";
 import logo from "../assets/logo.png";
 import name from "../assets/name.png";
 import dashboard from "../assets/dashboard.svg";
@@ -10,12 +11,12 @@ import "../css/Navbar.css";
 
 function NavBarButton({destination, buttonIcon, buttonText}) {
     return (
-        <Link to={`/${destination}`} className="buttonLink">
+        <NavLink to={`/${destination}`} className="buttonLink">
             <button type="button">
                 <img src={buttonIcon} alt="Button Icon" className="buttonIcon"/>
                 {buttonText}
             </button>
-        </Link>
+        </NavLink>
     )
 }
 

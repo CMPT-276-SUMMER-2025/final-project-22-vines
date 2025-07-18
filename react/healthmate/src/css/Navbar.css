@@ -42,6 +42,20 @@
 
 .navbar button:active {
     background-color: #FF6565;
+    color: white;
+}
+
+.navbar button:active img {
+    filter: invert(100%);
+}
+
+.buttonLink.active button {
+    background-color: #FF6565;
+    color: white;
+}
+
+.buttonLink.active img {
+    filter: invert(100%);
 }
 
 .buttonIcon {
