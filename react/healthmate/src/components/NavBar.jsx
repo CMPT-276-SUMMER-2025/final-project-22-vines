@@ -6,7 +6,6 @@ import logfood from "../assets/logfood.svg";
 import analyzemeal from "../assets/analyzemeal.svg";
 import trackexercise from "../assets/trackexercise.svg";
 import settings from "../assets/settings.svg";
-
 import "../css/Navbar.css";
 
 function NavBarButton({destination, buttonIcon, buttonText}) {

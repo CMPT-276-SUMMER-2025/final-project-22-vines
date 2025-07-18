@@ -1,11 +1,12 @@
 import NavBar from '../components/NavBar'
 import {useState} from 'react'
+import "../css/AnalyzeMeal.css";
 
 function SearchResult({food, handleClick}) {
     return (
-        <div>
-            <p>{food.name}</p>
+        <div className="searchResult">
             <button type="button" onClick={() => handleClick(food)}>+</button>
+            <p>{food.name}</p>
         </div>
     )
 }
@@ -30,6 +31,14 @@ function NutritionalInfo({food}) {
             </div>
         )
     }
+}
+
+function AdditionalInfo() {
+    return (
+        <div>
+            <p>Additonal information/tips about the selected food goes here.</p>
+        </div>
+    )
 }
 
 function AnalyzeMeal() {
@@ -88,7 +97,10 @@ function AnalyzeMeal() {
                     <p>Nutritional Information</p>
                     <NutritionalInfo food={info}/>
                 </div>
-                <div className="additionalInfo"></div>
+                <div className="additionalInfo">
+                    <p>Additional information</p>
+                    <AdditionalInfo/>
+                </div>
             </div>
         </> 
     )
