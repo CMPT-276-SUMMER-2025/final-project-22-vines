@@ -1,5 +1,4 @@
-// starter template
-require('dotenv').config(); // Loads .env variables
+require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
@@ -9,12 +8,13 @@ const PORT = 4000;
 app.use(cors());
 app.use(express.json());
 
-// Example route to test
+// adding Edamam routes
+const edamamRoutes = require('./routes/edamamRoutes');
+app.use('/api/edamam', edamamRoutes);
+
 app.get('/', (req, res) => {
   res.send('HealthMate Backend is running!');
 });
-
-// to add Edamam routes later here..
 
 app.listen(PORT, () => {
   console.log(`Server is listening on http://localhost:${PORT}`);
