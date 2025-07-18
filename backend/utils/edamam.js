@@ -14,8 +14,8 @@ async function analyzeMeal(recipe) {
     );
     return response.data;
   } catch (err) {
-    console.error('Edamam error:', err.response?.data || err.message);
-    throw new Error('Failed to analyze meal');
+    console.error('Edamam API Error:', err.response?.data || err.message);
+    throw new Error(err.response?.data?.message || 'Failed to analyze meal');
   }
 }
 
