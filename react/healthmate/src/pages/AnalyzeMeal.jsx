@@ -1,5 +1,6 @@
 import NavBar from '../components/NavBar'
 import {useState} from 'react'
+import analyzemeal from "../assets/analyzemeal.svg";
 import "../css/AnalyzeMeal.css";
 
 function SearchResult({food, handleClick}) {
@@ -76,13 +77,16 @@ function AnalyzeMeal() {
             <div className="analyzeMeal">
                 <div className="searchMenu">
                     <form onSubmit={handleSearch} className="searchForm">
-                        <input
-                            type="text"
-                            placeholder="Search for meals..."
-                            className="searchInput"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                        />
+                        <div className="searchBar">
+                            <img src={analyzemeal} alt="Search Icon"/>
+                            <input
+                                type="text"
+                                placeholder="Search for meals..."
+                                className="searchInput"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                            />
+                        </div>
                     </form>
                     <div className="searchResults">
                         {meals.map(
