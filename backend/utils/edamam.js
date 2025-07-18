@@ -4,7 +4,7 @@ const EDAMAM_APP_ID = process.env.EDAMAM_APP_ID;
 const EDAMAM_API_KEY = process.env.EDAMAM_API_KEY;
 const BASE_URL = 'https://api.edamam.com/api/nutrition-details';
 
-// 1. Analyze full meal
+// Graceful Edamam wrapper
 async function analyzeMeal(recipe) {
   try {
     const response = await axios.post(
@@ -14,10 +14,23 @@ async function analyzeMeal(recipe) {
     );
     return response.data;
   } catch (err) {
-    console.error('Edamam API Error:', err.response?.data || err.message);
-    throw new Error(err.response?.data?.message || 'Failed to analyze meal');
+    const status = err.response?.status;
+    const message = err.response?.data?.message || err.message;
+
+    // 🔎 Handle specific Edamam issues
+    if (status === 555 || message.includes("Cannot parse ingredient")) {
+      throw new Error("One or more ingredients could not be analyzed. Try simplifying the list.");
+    } else if (status === 401) {
+      throw new Error("Unauthorized: Check your Edamam API keys.");
+    } else if (status === 413) {
+      throw new Error("Request too large. Try reducing the number of ingredients.");
+    } else {
+      console.error('Unexpected Edamam API Error:', err.response?.data || err.message);
+      throw new Error("An unexpected error occurred while analyzing the meal.");
+    }
   }
 }
+
 
 // 2. Filter labels (e.g., vegan, keto)
 function filterDietLabels(nutritionData) {
