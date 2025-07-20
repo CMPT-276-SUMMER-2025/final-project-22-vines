@@ -20,7 +20,7 @@ jobs:
           node-version: 22.16.0
 
       - name: Install dependencies
-        run: npm@latest ci
+        run: npm@5 ci
         
       - name: Build React app
         run: npm run build
