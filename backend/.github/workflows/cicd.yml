@@ -1,4 +1,4 @@
-name: Windows React CI
+name: Windows React CI/CD
 
 on:
   push:
@@ -24,3 +24,10 @@ jobs:
         
       - name: Build React app
         run: npm run build
+
+      - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build
