@@ -4,8 +4,9 @@ const { getFirestore } = require('firebase-admin/firestore');
 // Initialize once
 if (!admin.apps.length) {
   admin.initializeApp({
-    credential: admin.credential.applicationDefault(), 
-  });
+  credential: admin.credential.applicationDefault(),
+  projectId: 'healthmate-d5dc5'
+});
 }
 
 const db = getFirestore();
