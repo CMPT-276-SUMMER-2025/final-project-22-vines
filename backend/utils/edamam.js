@@ -4,7 +4,7 @@ const EDAMAM_APP_ID = process.env.EDAMAM_APP_ID;
 const EDAMAM_API_KEY = process.env.EDAMAM_API_KEY;
 const BASE_URL = 'https://api.edamam.com/api/nutrition-details';
 
-// Graceful Edamam wrapper
+// 1. Analyze meal
 async function analyzeMeal(recipe) {
   try {
     const response = await axios.post(
@@ -17,7 +17,7 @@ async function analyzeMeal(recipe) {
     const status = err.response?.status;
     const message = err.response?.data?.message || err.message;
 
-    // 🔎 Handle specific Edamam issues
+    // Handle specific Edamam issues
     if (status === 555 || message.includes("Cannot parse ingredient")) {
       throw new Error("One or more ingredients could not be analyzed. Try simplifying the list.");
     } else if (status === 401) {
