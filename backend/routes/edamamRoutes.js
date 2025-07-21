@@ -5,8 +5,6 @@ const { analyzeMealController } = require('../controllers/mealController.js');
 
 router.post('/analyze', analyzeMealController);
 
-module.exports = router;
-
 router.get('/logs/:userId', async (req, res) => {
   try {
     const logs = await getMealLogs(req.params.userId);
@@ -15,3 +13,5 @@ router.get('/logs/:userId', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+module.exports = router;
