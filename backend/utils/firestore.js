@@ -11,21 +11,20 @@ if (!admin.apps.length) {
 
 const db = getFirestore();
 
-// saving a meal log for a user
-async function saveMealLog(userId, logData) {
+// Save log anonymously
+async function saveMealLog(logData) {
   await db.collection('mealLogs').add({
-    userId,
     ...logData,
     timestamp: new Date()
   });
 }
 
-// fetching logs for a user
-async function getMealLogs(userId) {
+// Fetch all logs (limited, since no userId filter)
+async function getMealLogs() {
   const snapshot = await db
     .collection('mealLogs')
-    .where('userId', '==', userId)
     .orderBy('timestamp', 'desc')
+    .limit(10)
     .get();
 
   return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));

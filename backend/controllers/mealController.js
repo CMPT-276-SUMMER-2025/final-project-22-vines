@@ -13,10 +13,10 @@ const analyzeMealController = async (req, res) => {
     const labels = filterDietLabels(nutrition);
     const tips = getNutritionTips(nutrition);
 
-    await saveMealLog('demoUser123', {
-      input: recipe,
-      output: { nutrition, labels, tips }
-    });
+    await saveMealLog({
+  input: recipe,
+  output: { nutrition, labels, tips }
+});
 
     res.json({ nutrition, labels, tips });
   } catch (err) {
