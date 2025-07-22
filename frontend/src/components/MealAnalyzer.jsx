@@ -9,11 +9,11 @@ const MealAnalyzer = () => {
   const [compatibilityInfo, setCompatibilityInfo] = useState(null);
 
   const handleAnalyzeMeal = async () => {
-    const userId = 'testUser123';
-    const result = await analyzeMeal(mealText, userId);
-    setAnalysisResult(result);
-    setIsAnalyzed(true);
-  };
+  const result = await analyzeMeal(mealText); 
+  setAnalysisResult(result);
+  setIsAnalyzed(true);
+};
+
 
   const handleCheckCompatibility = async () => {
     const result = await checkMealCompatibility(analysisResult);
