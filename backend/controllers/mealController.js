@@ -1,5 +1,3 @@
-const { saveMealLog, getMealLogs } = require('../utils/firestore');
-
 const {
   analyzeMeal,
   filterDietLabels,
@@ -8,15 +6,12 @@ const {
 
 const analyzeMealController = async (req, res) => {
   try {
+    console.log("input:", req.body);
     const recipe = req.body;
     const nutrition = await analyzeMeal(recipe);
+    console.log("output:", nutrition);
     const labels = filterDietLabels(nutrition);
     const tips = getNutritionTips(nutrition);
-
-    await saveMealLog({
-  input: recipe,
-  output: { nutrition, labels, tips }
-});
 
     res.json({ nutrition, labels, tips });
   } catch (err) {
