@@ -44,8 +44,19 @@ function AnalyzeMeal2() {
     };
     
     const handleCheckCompatibility = async () => {
-        const result = await checkMealCompatibility(analysisResult);
-        setCompatibilityInfo(result);
+        try {
+            // const result = await checkMealCompatibility(analysisResult);
+            
+            const result = {
+                cautions: analysisResult.nutrition.cautions,
+                dietLabels: analysisResult.nutrition.dietLabels,
+                healthLabels: analysisResult.nutrition.healthLabels,
+            }
+
+            setCompatibilityInfo(result);
+        } catch (err) {
+            console.error("error: ", err);
+        }
     };
 
     const handleNutritionTips = async () => {
@@ -151,7 +162,12 @@ function AnalyzeMeal2() {
             {compatibilityInfo && (
                 <div>
                 <h4>Compatibility Info:</h4>
-                <pre>{JSON.stringify(compatibilityInfo, null, 2)}</pre>
+                <h5>Cautions</h5>
+                <pre>{JSON.stringify(compatibilityInfo.cautions, null, 2)}</pre>
+                <h5>Diet labels</h5>
+                <pre>{JSON.stringify(compatibilityInfo.dietLabels, null, 2)}</pre>
+                <h5>Health labels</h5>
+                <pre>{JSON.stringify(compatibilityInfo.healthLabels, null, 2)}</pre>
                 </div>
             )}
 
