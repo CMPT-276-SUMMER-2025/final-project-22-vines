@@ -40,54 +40,57 @@ function filterDietLabels(nutritionData) {
 // 3. Generate tips based on calories/labels
 function getNutritionTips(nutritionData) {
   const tips = [];
+  console.log("hello: ", nutritionData);
+  // console.log("hello2: ", nutritionData.ingredients);
+  // console.log("")
 
-  const calories = nutritionData.calories;
-  const fat = nutritionData.totalNutrients?.FAT?.quantity || 0;
-  const sugar = nutritionData.totalNutrients?.SUGAR?.quantity || 0;
-  const sodium = nutritionData.totalNutrients?.NA?.quantity || 0;
-  const fiber = nutritionData.totalNutrients?.FIBTG?.quantity || 0;
-  const protein = nutritionData.totalNutrients?.PROCNT?.quantity || 0;
-  const healthLabels = nutritionData.healthLabels || [];
+  // const calories = nutritionData.calories;
+  // const fat = nutritionData.totalNutrients?.FAT?.quantity || 0;
+  // const sugar = nutritionData.totalNutrients?.SUGAR?.quantity || 0;
+  // const sodium = nutritionData.totalNutrients?.NA?.quantity || 0;
+  // const fiber = nutritionData.totalNutrients?.FIBTG?.quantity || 0;
+  // const protein = nutritionData.totalNutrients?.PROCNT?.quantity || 0;
+  // const healthLabels = nutritionData.healthLabels || [];
 
-  // Calorie tips
-  if (calories > 700) {
-    tips.push('This meal is high in calories. Consider reducing portion size.');
-  } else if (calories < 300) {
-    tips.push('This meal is low in calories. Consider adding a source of protein or healthy fats.');
-  }
+  // // Calorie tips
+  // if (calories > 700) {
+  //   tips.push('This meal is high in calories. Consider reducing portion size.');
+  // } else if (calories < 300) {
+  //   tips.push('This meal is low in calories. Consider adding a source of protein or healthy fats.');
+  // }
 
-  // Fat content
-  if (fat > 70) {
-    tips.push('Fat content is high. Consider reducing oil, butter, or fatty meats.');
-  }
+  // // Fat content
+  // if (fat > 70) {
+  //   tips.push('Fat content is high. Consider reducing oil, butter, or fatty meats.');
+  // }
 
-  // Sugar warning
-  if (sugar > 25) {
-    tips.push('Sugar content is high. Try cutting back on sugary sauces or sweeteners.');
-  }
+  // // Sugar warning
+  // if (sugar > 25) {
+  //   tips.push('Sugar content is high. Try cutting back on sugary sauces or sweeteners.');
+  // }
 
-  // Sodium warning
-  if (sodium > 2300) {
-    tips.push('Sodium level is very high. Watch out for processed or salty foods.');
-  }
+  // // Sodium warning
+  // if (sodium > 2300) {
+  //   tips.push('Sodium level is very high. Watch out for processed or salty foods.');
+  // }
 
-  // Fiber encouragement
-  if (fiber < 10) {
-    tips.push('Fiber is low. Add whole grains, beans, or veggies for better digestion.');
-  }
+  // // Fiber encouragement
+  // if (fiber < 10) {
+  //   tips.push('Fiber is low. Add whole grains, beans, or veggies for better digestion.');
+  // }
 
-  // Protein praise
-  if (protein > 20) {
-    tips.push('Great source of protein!');
-  }
+  // // Protein praise
+  // if (protein > 20) {
+  //   tips.push('Great source of protein!');
+  // }
 
-  // Health labels praise
-  if (healthLabels.includes('LOW_SODIUM')) {
-    tips.push('Nice work keeping sodium levels low!');
-  }
-  if (healthLabels.includes('HIGH_FIBER')) {
-    tips.push('Excellent fiber content in this meal!');
-  }
+  // // Health labels praise
+  // if (healthLabels.includes('LOW_SODIUM')) {
+  //   tips.push('Nice work keeping sodium levels low!');
+  // }
+  // if (healthLabels.includes('HIGH_FIBER')) {
+  //   tips.push('Excellent fiber content in this meal!');
+  // }
 
   return tips;
 }

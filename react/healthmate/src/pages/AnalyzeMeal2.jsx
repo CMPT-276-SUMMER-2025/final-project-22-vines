@@ -49,8 +49,74 @@ function AnalyzeMeal2() {
     };
 
     const handleNutritionTips = async () => {
-        const result = await getNutritionTips(analysisResult);
-        setTips(result);
+        try {
+            // const result = await getNutritionTips(analysisResult);
+            console.log("nutriton tips test: ", analysisResult);
+            let calories = 0;
+            let fat = 0;
+            let sugar = 0;
+            let sodium = 0;
+            let fiber = 0;
+            let protein = 0;
+            let healthLabels = analysisResult.nutrition.healthLabels || [];
+            const ingredients = analysisResult.nutrition.ingredients;
+
+            for (let i = 0; i < ingredients.length; i++) {
+                calories += ingredients[i].parsed[0].nutrients.ENERC_KCAL.quantity || 0;
+                fat += ingredients[i].parsed[0].nutrients.FAT.quantity || 0;
+                sugar += ingredients[i].parsed[0].nutrients.SUGAR.quantity || 0;
+                sodium += ingredients[i].parsed[0].nutrients.NA.quantity || 0;
+                fiber += ingredients[i].parsed[0].nutrients.FIBTG.quantity || 0;
+                protein += ingredients[i].parsed[0].nutrients.PROCNT.quantity || 0;
+            }
+
+            const tips = [];
+
+             // Calorie tips
+            if (calories > 700) {
+                tips.push('This meal is high in calories. Consider reducing portion size.');
+            } else if (calories < 300) {
+                tips.push('This meal is low in calories. Consider adding a source of protein or healthy fats.');
+            }
+
+            // Fat content
+            if (fat > 70) {
+                tips.push('Fat content is high. Consider reducing oil, butter, or fatty meats.');
+            }
+
+            // Sugar warning
+            if (sugar > 25) {
+                tips.push('Sugar content is high. Try cutting back on sugary sauces or sweeteners.');
+            }
+
+            // Sodium warning
+            if (sodium > 2300) {
+                tips.push('Sodium level is very high. Watch out for processed or salty foods.');
+            }
+
+            // Fiber encouragement
+            if (fiber < 10) {
+                tips.push('Fiber is low. Add whole grains, beans, or veggies for better digestion.');
+            }
+
+            // Protein praise
+            if (protein > 20) {
+                tips.push('Great source of protein!');
+            }
+
+            // Health labels praise
+            if (healthLabels.includes('LOW_SODIUM')) {
+                tips.push('Nice work keeping sodium levels low!');
+            }
+            if (healthLabels.includes('HIGH_FIBER')) {
+                tips.push('Excellent fiber content in this meal!');
+            }
+            
+            setTips(tips);
+        } catch (err) {
+            console.error("error: ", err);
+        }
+        
     };
 
     return (
