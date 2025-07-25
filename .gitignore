@@ -1,3 +1,4 @@
-node_modules/
+# Firebase & backend secrets
+backend/firestore/serviceAccountKey.json
+backend/.env
 .env
-/frontend/node_modules/
