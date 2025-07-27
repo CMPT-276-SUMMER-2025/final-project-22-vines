@@ -1,23 +1,19 @@
-import logo from './logo.svg';
-import './App.css';
 
+import React from 'react';
+import MealAnalyzer from './components/MealAnalyzer';
+
+/**
+App Component: The main entry point of the React application.
+ 
+OUTPUT:
+Renders the application title and the MealAnalyzer component
+ */
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>HealthMate - Meal Analyzer</h1>
+      {/* Renders the core component for user input and meal analysis */}
+      <MealAnalyzer />
     </div>
   );
 }
