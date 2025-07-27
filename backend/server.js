@@ -1,22 +1,22 @@
+
+// Load environment variables from .env file into process.env
 require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
-const app = express();
-const PORT = 4000;
+const edamamRoutes = require('./routes/edamamRoutes');
 
+const app = express();
+const PORT = process.env.PORT || 5000;
+
+// Enable Cross-Origin Resource Sharing to allow requests from frontend
 app.use(cors());
+
+// Enable parsing of JSON request bodies
 app.use(express.json());
 
-// adding Edamam routes
-const edamamRoutes = require('./routes/edamamRoutes');
+// Mount Edamam-related API routes at /api/edamam
 app.use('/api/edamam', edamamRoutes);
 
-app.get('/', (req, res) => {
-  res.send('HealthMate Backend is running!');
-});
-
-app.listen(PORT, () => {
-  console.log(`Server is listening on http://localhost:${PORT}`);
-  console.log("Edamam APP ID:", process.env.EDAMAM_APP_ID);
-});
+// Start the server and listen on the specified port
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
