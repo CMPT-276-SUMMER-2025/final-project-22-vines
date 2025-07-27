@@ -2,17 +2,16 @@ const axios = require('axios');
 const db = require('../firebase');
 
 /**
- * analyzeMealController
- * ---------------------
- * Analyzes a meal using the Edamam Nutrition Analysis API.
- * 
- * INPUT:
- * - req.body.title (string): The title of the meal
- * - req.body.ingr (string[]): Array of ingredients
- * 
- * OUTPUT:
- * - JSON response with full nutrition analysis result from Edamam
- * - Saves the result to Firestore under the 'latestMeal' document
+analyzeMealController
+Analyzes a meal using the Edamam Nutrition Analysis API.
+ 
+  INPUT:
+ req.body.title (string): The title of the meal
+ req.body.ingr (string[]): Array of ingredients
+ 
+ OUTPUT:
+JSON response with full nutrition analysis result from Edamam
+Saves the result to Firestore under the 'latestMeal' document
  */
 const analyzeMealController = async (req, res) => {
   try {
@@ -40,15 +39,12 @@ const analyzeMealController = async (req, res) => {
 };
 
 /**
- * getLatestMealController
- * -----------------------
- * Retrieves the most recently analyzed meal from Firestore.
- * 
- * INPUT:
- * - None (uses the 'latestMeal' doc in Firestore)
- * 
- * OUTPUT:
- * - JSON object containing the latest meal analysis data
+ getLatestMealController
+ Retrieves the most recently analyzed meal from Firestore.
+ INPUT:
+  None (uses the 'latestMeal' doc in Firestore)
+ OUTPUT:
+  JSON object containing the latest meal analysis data
  */
 const getLatestMealController = async (req, res) => {
   try {
