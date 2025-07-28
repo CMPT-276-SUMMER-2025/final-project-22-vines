@@ -123,6 +123,23 @@ export default function MealAnalyzer() {
       setTempValues(['']);
   };
 
+  const handleKeyDown = (e, index) => {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault(); // Prevent newline or comma from appearing
+      const currentValue = tempValues[index].trim();
+
+      if (currentValue !== '') {
+        handleBlur(index);   // Optionally save the current input
+        addFields();         // Create a new field
+        setTimeout(() => {
+          // Focus the new input (next index)
+          const nextInput = inputRef.current?.querySelectorAll('input')[index + 1];
+          nextInput?.focus();
+        }, 0);
+      }
+    }
+  };
+
   /**
    aggregateNutrients: Aggregates the quantities of each nutrient across all ingredients.
    
@@ -217,6 +234,7 @@ export default function MealAnalyzer() {
                             value={tempValues[index]}
                             onChange={(e) => handleChange(index, e.target.value)}
                             onBlur={() => handleBlur(index)}
+                            onKeyDown={(e) => handleKeyDown(e, index)}
                         />
                         <button type="button" onClick={() => removeFields(index)} className='removeBtn'><img src={removeIcon} alt="Button Icon" className="buttonIcon"/></button>
                     </div>
