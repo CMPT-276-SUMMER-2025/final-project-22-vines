@@ -1,8 +1,8 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { analyzeMeal, getLatestMeal } from '../api/mealAPI';
 import { DIET_LABELS, checkDietCompatibility } from '../utils/dietLabels';
 import { generateNutritionTips } from '../utils/nutritionTips';
+import useUndoRedo from '../hooks';
 
 // Nutrients to be shown in the table with human-readable labels and units
 const TARGET_NUTRIENTS = {
@@ -50,6 +50,81 @@ export default function MealAnalyzer() {
   const [compatibilityResult, setCompatibilityResult] = useState(null);
   const [tips, setTips] = useState([]);
 
+  const [mealText, setMealText] = useState('');
+  const [analysisResult, setAnalysisResult] = useState(null);
+  const [isAnalyzed, setIsAnalyzed] = useState(false);
+  const [compatibilityInfo, setCompatibilityInfo] = useState(null);
+  
+  // Food entry box
+  // const [formFields, setFormFields] = useState([
+  //     {food: ''},
+  // ])
+  const [tempValues, setTempValues] = useState(['']);
+
+  // Undo/redo
+  const [formFields, setFormFieldsRaw, undo, redo, inputRef] = useUndoRedo([{ food: '' }], 10);
+
+  useEffect(() => {
+      setTempValues(formFields.map(field => field.food || ''));
+  }, [formFields]);
+
+  useEffect(() => {
+      if (inputRef.current) {
+          const inputs = inputRef.current.querySelectorAll('input');
+          if (inputs.length > 0) {
+              inputs[inputs.length - 1].focus();
+          }
+      }
+  }, [tempValues.length]);
+
+
+  const submit = (e) => {
+      e.preventDefault();
+      console.log(formFields);
+      handleAnalyze(formFields);
+  }
+
+  const addFields = () => {
+      const newFormFields = [...formFields, { food: '' }];
+      const newTempValues = [...tempValues, ''];
+
+      // First update formFields (pushes to undo history)
+      setFormFieldsRaw(newFormFields, true);
+
+      // Then update UI-only tempValues
+      setTempValues(newTempValues);
+  };
+
+  const removeFields = (index) => {
+      const updatedFields = [...formFields];
+      const updatedTemps = [...tempValues];
+      updatedFields.splice(index, 1);
+      updatedTemps.splice(index, 1);
+      setFormFieldsRaw(updatedFields, true);
+      setTempValues(updatedTemps);
+  }
+
+  const handleChange = (index, value) => {
+      const newTemps = [...tempValues];
+      newTemps[index] = value;
+      setTempValues(newTemps);
+  };
+
+  // Blur
+  const handleBlur = (index) => {
+      const newFields = [...formFields];
+      newFields[index].food = tempValues[index];
+      setFormFieldsRaw(newFields, false);
+      console.log('Committed formFields:', newFields);
+  };
+
+  const clearAllFields = () => {
+      if (formFields.length === 1 && formFields[0].food === '') return;
+
+      setFormFieldsRaw([{food: ''}], true);
+      setTempValues(['']);
+  };
+
   /**
    aggregateNutrients: Aggregates the quantities of each nutrient across all ingredients.
    
@@ -85,13 +160,16 @@ export default function MealAnalyzer() {
    Sends the meal to the backend for analysis and updates state with the results.
    */
   const handleAnalyze = async () => {
-    await analyzeMeal(mealInput);
+    const combinedInput = formFields.map(f => f.food.trim()).filter(Boolean).join(', ');
+    if (!combinedInput) return alert("Please enter some foods.");
+
+    await analyzeMeal(combinedInput);
     const latest = await getLatestMeal();
 
     const totals = aggregateNutrients(latest.ingredients);
     setNutrients(totals);
-    setCompatibilityResult(null); // Reset compatibility check result
-    setTips([]); // Clear existing tips
+    setCompatibilityResult(null);
+    setTips([]);
   };
 
   /**
@@ -118,7 +196,7 @@ export default function MealAnalyzer() {
     <div>
       <h2>Enter Your Meal</h2>
       {/* Input field for user to type in ingredients */}
-      <textarea
+      {/* <textarea
         value={mealInput}
         onChange={(e) => setMealInput(e.target.value)}
         placeholder="e.g. 2 eggs, 1 toast, 1 banana"
@@ -126,7 +204,29 @@ export default function MealAnalyzer() {
         cols={40}
       />
       <br />
-      <button onClick={handleAnalyze}>Analyze Meal</button>
+      <button onClick={handleAnalyze}>Analyze Meal</button> */}
+
+      <div className='foodEntryBox'>
+          <form onSubmit={submit} ref={inputRef}>
+              {formFields.map((_, index) => (
+                  <div key={index}>
+                      <input
+                          name="food"
+                          placeholder="Enter food"
+                          value={tempValues[index]}
+                          onChange={(e) => handleChange(index, e.target.value)}
+                          onBlur={() => handleBlur(index)}
+                      />
+                      <button type="button" onClick={() => removeFields(index)}>Remove</button>
+                  </div>
+              ))}
+          </form>
+          <button type="button" onClick={addFields}>Click to add another item...</button>
+          <button onClick={undo}>Undo</button>
+          <button onClick={redo}>Redo</button>
+          <button type="button" onClick={clearAllFields}>Clear All Entries</button>
+          <button type="button" onClick={submit}>Save</button>
+      </div>
 
       {/* Display nutrition results if available */}
       {nutrients && (
