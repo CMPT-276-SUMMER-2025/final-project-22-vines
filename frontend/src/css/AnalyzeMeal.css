@@ -159,7 +159,23 @@
   color: white;
 }
 
+.tabSwitcher button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 .tabContent {
   flex: 1;
   overflow-y: auto;
+}
+
+.analysisPlaceholder {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80%;
+  text-align: center;
+  color: #888;
+  font-size: 1rem;
 }
