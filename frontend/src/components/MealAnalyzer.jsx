@@ -3,6 +3,7 @@ import { analyzeMeal, getLatestMeal } from '../api/mealAPI';
 import { DIET_LABELS, checkDietCompatibility } from '../utils/dietLabels';
 import { generateNutritionTips } from '../utils/nutritionTips';
 import useUndoRedo from '../hooks';
+import "../css/AnalyzeMeal.css";
 
 // Nutrients to be shown in the table with human-readable labels and units
 const TARGET_NUTRIENTS = {
@@ -184,43 +185,35 @@ export default function MealAnalyzer() {
   };
 
   return (
-    <div>
-      <h2>Enter Your Meal</h2>
-      {/* Input field for user to type in ingredients */}
-      {/* <textarea
-        value={mealInput}
-        onChange={(e) => setMealInput(e.target.value)}
-        placeholder="e.g. 2 eggs, 1 toast, 1 banana"
-        rows={4}
-        cols={40}
-      />
-      <br />
-      <button onClick={handleAnalyze}>Analyze Meal</button> */}
-
-      <div className='foodEntryBox'>
-          <form onSubmit={submit} ref={inputRef}>
-              {formFields.map((_, index) => (
-                  <div key={index}>
-                      <input
-                          name="food"
-                          placeholder="Enter food"
-                          value={tempValues[index]}
-                          onChange={(e) => handleChange(index, e.target.value)}
-                          onBlur={() => handleBlur(index)}
-                      />
-                      <button type="button" onClick={() => removeFields(index)}>Remove</button>
-                  </div>
-              ))}
-          </form>
-          <button type="button" onClick={addFields}>Click to add another item...</button>
-          <button onClick={undo}>Undo</button>
-          <button onClick={redo}>Redo</button>
-          <button type="button" onClick={clearAllFields}>Clear All Entries</button>
-          <button type="button" onClick={submit}>Save</button>
+    <div className="analyzeMeal">
+      <div className='foodEntryContainer'>
+        <h2>Enter Your Meal</h2>
+        {/* Input field for user to type in ingredients */}
+        <div className='foodEntryBox'>
+            <form onSubmit={submit} ref={inputRef}>
+                {formFields.map((_, index) => (
+                    <div key={index}>
+                        <input
+                            name="food"
+                            placeholder="Enter food"
+                            value={tempValues[index]}
+                            onChange={(e) => handleChange(index, e.target.value)}
+                            onBlur={() => handleBlur(index)}
+                        />
+                        <button type="button" onClick={() => removeFields(index)}>Remove</button>
+                    </div>
+                ))}
+            </form>
+            <button type="button" onClick={addFields}>Click to add another item...</button>
+            <button onClick={undo}>Undo</button>
+            <button onClick={redo}>Redo</button>
+            <button type="button" onClick={clearAllFields}>Clear All Entries</button>
+            <button type="button" onClick={submit}>Save</button>
+        </div>
       </div>
 
       {/* Display nutrition results if available */}
-
+      <div className='analysisResultsContainer'>
       {nutrients && (
         <div className="tab-buttons" style={{ marginTop: '20px' }}>
           <button onClick={() => setActiveTab('summary')}>Nutrition Summary</button>
@@ -229,7 +222,6 @@ export default function MealAnalyzer() {
         </div>
       )}
 
-      <div style={{ marginTop: '30px' }}>
       {activeTab === 'summary' && nutrients && (
         <div>
           <h3>Nutrition Summary</h3>

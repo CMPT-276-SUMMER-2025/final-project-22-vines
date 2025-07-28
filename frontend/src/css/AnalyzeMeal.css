@@ -1,0 +1,14 @@
+.analyzeMeal {
+    display: flex;
+    justify-content: space-between;
+    background-color: rgb(247, 247, 247);
+    height: 90vh;
+    box-sizing: border-box;
+    padding: 15px 5%;
+}
+
+.analyzeMeal > div > div {
+    padding: 10px;
+    border-radius: 8px;
+    background-color: white;
+}
