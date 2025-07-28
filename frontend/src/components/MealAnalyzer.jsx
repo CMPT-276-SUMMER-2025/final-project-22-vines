@@ -140,6 +140,12 @@ export default function MealAnalyzer() {
     }
   };
 
+  useEffect(() => {
+    if (activeTab === 'tips' && tips.length === 0) {
+      handleGenerateTips();
+    }
+  }, [activeTab]);
+
   /**
    aggregateNutrients: Aggregates the quantities of each nutrient across all ingredients.
    
@@ -283,7 +289,7 @@ export default function MealAnalyzer() {
               <div>
                 <p><strong>Calories:</strong> {nutrients.ENERC_KCAL?.toFixed(0) || '0'}</p>
 
-                <table border="1" cellPadding="8" style={{ marginTop: '10px', borderCollapse: 'collapse' }}>
+                <table border="1" cellPadding="8" style={{ borderCollapse: 'collapse' }}>
                   <thead>
                     <tr>
                       <th>Nutrient</th>
@@ -335,7 +341,6 @@ export default function MealAnalyzer() {
 
             {activeTab === 'tips' && (
               <div>
-                <button onClick={handleGenerateTips}>Get Nutrition Tips</button>
                 <ul>
                   {tips.map((tip, idx) => (
                     <li key={idx}>{tip}</li>
