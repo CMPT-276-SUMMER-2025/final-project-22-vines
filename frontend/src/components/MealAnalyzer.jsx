@@ -44,23 +44,14 @@ const TARGET_NUTRIENTS = {
 };
 
 export default function MealAnalyzer() {
-  const [mealInput, setMealInput] = useState('');
+  const [activeTab, setActiveTab] = useState('');
   const [nutrients, setNutrients] = useState(null);
   const [selectedLabel, setSelectedLabel] = useState('');
   const [compatibilityResult, setCompatibilityResult] = useState(null);
   const [tips, setTips] = useState([]);
-
-  const [mealText, setMealText] = useState('');
-  const [analysisResult, setAnalysisResult] = useState(null);
-  const [isAnalyzed, setIsAnalyzed] = useState(false);
-  const [compatibilityInfo, setCompatibilityInfo] = useState(null);
   
   // Food entry box
-  // const [formFields, setFormFields] = useState([
-  //     {food: ''},
-  // ])
   const [tempValues, setTempValues] = useState(['']);
-
   // Undo/redo
   const [formFields, setFormFieldsRaw, undo, redo, inputRef] = useUndoRedo([{ food: '' }], 10);
 
@@ -79,10 +70,10 @@ export default function MealAnalyzer() {
 
 
   const submit = (e) => {
-      e.preventDefault();
-      console.log(formFields);
-      handleAnalyze(formFields);
-  }
+    e.preventDefault();
+    handleAnalyze(formFields);
+    setActiveTab('summary'); // default tab after saving
+  };
 
   const addFields = () => {
       const newFormFields = [...formFields, { food: '' }];
@@ -229,8 +220,18 @@ export default function MealAnalyzer() {
       </div>
 
       {/* Display nutrition results if available */}
+
       {nutrients && (
-        <div style={{ marginTop: '30px' }}>
+        <div className="tab-buttons" style={{ marginTop: '20px' }}>
+          <button onClick={() => setActiveTab('summary')}>Nutrition Summary</button>
+          <button onClick={() => setActiveTab('compatibility')}>Check Meal Compatibility</button>
+          <button onClick={() => setActiveTab('tips')}>Nutrition Tips</button>
+        </div>
+      )}
+
+      <div style={{ marginTop: '30px' }}>
+      {activeTab === 'summary' && nutrients && (
+        <div>
           <h3>Nutrition Summary</h3>
           <p><strong>Calories:</strong> {nutrients.ENERC_KCAL?.toFixed(0) || '0'}</p>
 
@@ -255,8 +256,11 @@ export default function MealAnalyzer() {
               ))}
             </tbody>
           </table>
+        </div>
+      )}
 
-          {/* Meal Compatibility Section */}
+      {activeTab === 'compatibility' && (
+        <div>
           <div style={{ marginTop: '30px' }}>
             <h3>Check Meal Compatibility</h3>
             <select
@@ -281,19 +285,23 @@ export default function MealAnalyzer() {
               </p>
             )}
           </div>
-
-          {/* Nutrition Tips Section */}
-          <div style={{ marginTop: '30px' }}>
-            <h3>Nutrition Tips</h3>
-            <button onClick={handleGenerateTips}>Get Nutrition Tips</button>
-            <ul>
-              {tips.map((tip, idx) => (
-                <li key={idx}>{tip}</li>
-              ))}
-            </ul>
-          </div>
         </div>
       )}
+
+      {activeTab === 'tips' && (
+        <div style={{ marginTop: '30px' }}>
+          <h3>Nutrition Tips</h3>
+          <button onClick={handleGenerateTips}>Get Nutrition Tips</button>
+          <ul>
+            {tips.map((tip, idx) => (
+              <li key={idx}>{tip}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+
+
     </div>
   );
 }
