@@ -23,7 +23,7 @@ jobs:
       - name: Install backend dependencies
         run: |
           cd ./backend
-          npm ci
+          npm install
 
 
       - name: Run backend tests
@@ -33,7 +33,7 @@ jobs:
       - name: Install Frontend dependencies
         run: |
           cd ./frontend
-          npm ci
+          npm install
         
         
       - name: Build React app
