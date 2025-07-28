@@ -4,6 +4,12 @@ import { DIET_LABELS, checkDietCompatibility } from '../utils/dietLabels';
 import { generateNutritionTips } from '../utils/nutritionTips';
 import useUndoRedo from '../hooks';
 import "../css/AnalyzeMeal.css";
+import addIcon from '../assets/buttons/add.svg';
+import undoIcon from '../assets/buttons/undo.svg';
+import redoIcon from '../assets/buttons/redo.svg';
+import clearIcon from '../assets/buttons/clear.svg';
+import enterIcon from '../assets/buttons/enter.svg';
+import removeIcon from '../assets/buttons/remove.svg';
 
 // Nutrients to be shown in the table with human-readable labels and units
 const TARGET_NUTRIENTS = {
@@ -190,9 +196,21 @@ export default function MealAnalyzer() {
         <h2>Enter Your Meal</h2>
         {/* Input field for user to type in ingredients */}
         <div className='foodEntryBox'>
-            <form onSubmit={submit} ref={inputRef}>
+            <div className="toolbar">
+              <div className="left-actions">
+                <button onClick={submit}><img src={enterIcon} alt="Submit" /> Submit</button>
+                <button onClick={addFields}><img src={addIcon} alt="Add" /></button>
+                <button onClick={undo}><img src={undoIcon} alt="Undo" /></button>
+                <button onClick={redo}><img src={redoIcon} alt="Redo" /></button>
+              </div>
+              <div className="right-actions">
+                <button onClick={clearAllFields}><img src={clearIcon} alt="Clear" /> Clear</button>
+              </div>
+            </div>
+            <div className='foodEntries'>
+              <form onSubmit={submit} ref={inputRef}>
                 {formFields.map((_, index) => (
-                    <div key={index}>
+                    <div key={index} className='foodEntry'>
                         <input
                             name="food"
                             placeholder="Enter food"
@@ -200,61 +218,55 @@ export default function MealAnalyzer() {
                             onChange={(e) => handleChange(index, e.target.value)}
                             onBlur={() => handleBlur(index)}
                         />
-                        <button type="button" onClick={() => removeFields(index)}>Remove</button>
+                        <button type="button" onClick={() => removeFields(index)} className='removeBtn'><img src={removeIcon} alt="Button Icon" className="buttonIcon"/></button>
                     </div>
                 ))}
-            </form>
-            <button type="button" onClick={addFields}>Click to add another item...</button>
-            <button onClick={undo}>Undo</button>
-            <button onClick={redo}>Redo</button>
-            <button type="button" onClick={clearAllFields}>Clear All Entries</button>
-            <button type="button" onClick={submit}>Save</button>
+              </form>
+            </div>
         </div>
       </div>
 
       {/* Display nutrition results if available */}
-      <div className='analysisResultsContainer'>
-      {nutrients && (
-        <div className="tab-buttons" style={{ marginTop: '20px' }}>
-          <button onClick={() => setActiveTab('summary')}>Nutrition Summary</button>
-          <button onClick={() => setActiveTab('compatibility')}>Check Meal Compatibility</button>
-          <button onClick={() => setActiveTab('tips')}>Nutrition Tips</button>
-        </div>
-      )}
+    <div className='analysisResultsContainer'>
+      <h2>Meal Analysis</h2>
+  
+      <div className="tabSwitcher">
+        <button className={activeTab === 'summary' ? 'active' : ''} onClick={() => setActiveTab('summary')}>Nutrition Summary</button>
+        <button className={activeTab === 'compatibility' ? 'active' : ''} onClick={() => setActiveTab('compatibility')}>Check Meal Compatibility</button>
+        <button className={activeTab === 'tips' ? 'active' : ''} onClick={() => setActiveTab('tips')}>Nutrition Tips</button>
+      </div>
+      
+      <div className="tabContent">
+        {activeTab === 'summary' && nutrients && (
+          <div>
+            <p><strong>Calories:</strong> {nutrients.ENERC_KCAL?.toFixed(0) || '0'}</p>
 
-      {activeTab === 'summary' && nutrients && (
-        <div>
-          <h3>Nutrition Summary</h3>
-          <p><strong>Calories:</strong> {nutrients.ENERC_KCAL?.toFixed(0) || '0'}</p>
-
-          <table border="1" cellPadding="8" style={{ marginTop: '10px', borderCollapse: 'collapse' }}>
-            <thead>
-              <tr>
-                <th>Nutrient</th>
-                <th>Label</th>
-                <th>Quantity</th>
-                <th>Unit</th>
-              </tr>
-            </thead>
-            <tbody>
-              {/* Loop through each nutrient and show its aggregated total */}
-              {Object.entries(TARGET_NUTRIENTS).map(([code, meta]) => (
-                <tr key={code}>
-                  <td>{code}</td>
-                  <td>{meta.label}</td>
-                  <td>{nutrients[code]?.toFixed(2) || "0.00"}</td>
-                  <td>{meta.unit}</td>
+            <table border="1" cellPadding="8" style={{ marginTop: '10px', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr>
+                  <th>Nutrient</th>
+                  <th>Label</th>
+                  <th>Quantity</th>
+                  <th>Unit</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+              </thead>
+              <tbody>
+                {/* Loop through each nutrient and show its aggregated total */}
+                {Object.entries(TARGET_NUTRIENTS).map(([code, meta]) => (
+                  <tr key={code}>
+                    <td>{code}</td>
+                    <td>{meta.label}</td>
+                    <td>{nutrients[code]?.toFixed(2) || "0.00"}</td>
+                    <td>{meta.unit}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
 
-      {activeTab === 'compatibility' && (
-        <div>
-          <div style={{ marginTop: '30px' }}>
-            <h3>Check Meal Compatibility</h3>
+        {activeTab === 'compatibility' && (
+          <div>
             <select
               value={selectedLabel}
               onChange={(e) => {
@@ -277,22 +289,24 @@ export default function MealAnalyzer() {
               </p>
             )}
           </div>
-        </div>
-      )}
+        )}
 
-      {activeTab === 'tips' && (
-        <div style={{ marginTop: '30px' }}>
-          <h3>Nutrition Tips</h3>
-          <button onClick={handleGenerateTips}>Get Nutrition Tips</button>
-          <ul>
-            {tips.map((tip, idx) => (
-              <li key={idx}>{tip}</li>
-            ))}
-          </ul>
-        </div>
-      )}
+        {activeTab === 'tips' && (
+          <div>
+            <button onClick={handleGenerateTips}>Get Nutrition Tips</button>
+            <ul>
+              {tips.map((tip, idx) => (
+                <li key={idx}>{tip}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+
+      
     </div>
 
+    <div className="rightSpacer"/>
 
     </div>
   );
