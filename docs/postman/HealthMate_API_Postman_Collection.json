@@ -1,0 +1,113 @@
+{
+	"info": {
+		"_postman_id": "c0b2845a-4837-42bb-8e31-ac58619894f1",
+		"name": "HealthMate_API_Postman_Collection.json",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "46791206"
+	},
+	"item": [
+		{
+			"name": "sample_meal_analysis.json",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"Fresh Salad\",\r\n  \"ingr\": [\r\n    \"1 cup lettuce\",\r\n    \"1 tomato\",\r\n    \"2 tbsp olive oil\"\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/api/edamam/analyze",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"edamam",
+						"analyze"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "problematic meal test",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"Problematic Meal\",\r\n  \"ingr\": [\r\n    \"2 scoops mystery sauce\"\r\n  ]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:4000/api/edamam/analyze",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"edamam",
+						"analyze"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "analyze meal 2 test",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"Healthy Meal\",\r\n  \"ingr\": [\r\n    \"1 grilled chicken breast\",\r\n    \"1 cup brown rice\",\r\n    \"1 cup steamed broccoli\"\r\n  ]\r\n}\r\n"
+				},
+				"url": {
+					"raw": "http://localhost:4000/api/edamam/analyze",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"api",
+						"edamam",
+						"analyze"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
