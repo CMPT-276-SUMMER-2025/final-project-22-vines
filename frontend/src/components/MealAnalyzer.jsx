@@ -50,6 +50,39 @@ const TARGET_NUTRIENTS = {
   ZN: { label: "Zinc, Zn", unit: "mg" }
 };
 
+const NUTRIENT_GROUPS = [
+  {
+    label: "Total Fat",
+    nutrients: ["FAT", "FASAT", "FATRN", "FAMS", "FAPU"]
+  },
+  {
+    label: "Cholesterol & Sodium",
+    nutrients: ["CHOLE", "NA"]
+  },
+  {
+    label: "Total Carbohydrate",
+    nutrients: ["CHOCDF", "CHOCDF.net", "FIBTG", "SUGAR", "SUGAR.added", "Sugar.alcohol"]
+  },
+  {
+    label: "Protein",
+    nutrients: ["PROCNT"]
+  },
+  {
+    label: "Vitamins & Minerals",
+    nutrients: [
+      "CA", "FE", "MG", "P", "K", "ZN",
+      "FOLDFE", "FOLFD", "FOLAC", "VITA_RAE", "VITB6A",
+      "VITB12", "VITC", "VITD", "TOCPHA", "VITK1",
+      "RIBF", "THIA", "NIA"
+    ]
+  },
+  {
+    label: "Other",
+    nutrients: ["WATER"]
+  }
+];
+
+
 export default function MealAnalyzer() {
   const [activeTab, setActiveTab] = useState('');
   const [nutrients, setNutrients] = useState(null);
@@ -263,6 +296,7 @@ export default function MealAnalyzer() {
               </tbody>
             </table>
           </div>
+<<<<<<< Updated upstream
         )}
 
         {activeTab === 'compatibility' && (
@@ -287,6 +321,50 @@ export default function MealAnalyzer() {
                 <strong>{compatibilityResult ? 'Compatible' : 'Not Compatible'}</strong>{' '}
                 with <strong>{selectedLabel}</strong> diet.
               </p>
+=======
+        ) : (
+          <>
+            {activeTab === 'summary' && nutrients && (
+              <div className="nutritionLabel">
+                <div className="caloriesLine">
+                  Calories: {nutrients.ENERC_KCAL?.toFixed(0) || '0'}
+                </div>
+
+                <table>
+                  <thead>
+                    <tr>
+                      <th style={{ textAlign: 'left' }}>Nutrient</th>
+                      <th style={{ textAlign: 'right' }}>Amount</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {NUTRIENT_GROUPS.map((group, groupIdx) => (
+                      <React.Fragment key={group.label}>
+                        <tr>
+                          <td colSpan="2" className="bold">{group.label}</td>
+                        </tr>
+                        {group.nutrients.map(code => {
+                          const meta = TARGET_NUTRIENTS[code];
+                          if (!meta) return null;
+
+                          return (
+                            <tr key={code}>
+                              <td style={{ paddingLeft: '1rem' }}>{meta.label}</td>
+                              <td className="quantity">{nutrients[code]?.toFixed(2) || "0.00"} {meta.unit}</td>
+                            </tr>
+                          );
+                        })}
+                      </React.Fragment>
+                    ))}
+                  </tbody>
+                </table>
+
+                <div className="heavy-line" />
+              </div>
+
+
+>>>>>>> Stashed changes
             )}
           </div>
         )}
