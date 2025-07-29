@@ -50,39 +50,6 @@ const TARGET_NUTRIENTS = {
   ZN: { label: "Zinc, Zn", unit: "mg" }
 };
 
-const NUTRIENT_GROUPS = [
-  {
-    label: "Total Fat",
-    nutrients: ["FAT", "FASAT", "FATRN", "FAMS", "FAPU"]
-  },
-  {
-    label: "Cholesterol & Sodium",
-    nutrients: ["CHOLE", "NA"]
-  },
-  {
-    label: "Total Carbohydrate",
-    nutrients: ["CHOCDF", "CHOCDF.net", "FIBTG", "SUGAR", "SUGAR.added", "Sugar.alcohol"]
-  },
-  {
-    label: "Protein",
-    nutrients: ["PROCNT"]
-  },
-  {
-    label: "Vitamins & Minerals",
-    nutrients: [
-      "CA", "FE", "MG", "P", "K", "ZN",
-      "FOLDFE", "FOLFD", "FOLAC", "VITA_RAE", "VITB6A",
-      "VITB12", "VITC", "VITD", "TOCPHA", "VITK1",
-      "RIBF", "THIA", "NIA"
-    ]
-  },
-  {
-    label: "Other",
-    nutrients: ["WATER"]
-  }
-];
-
-
 export default function MealAnalyzer() {
   const [activeTab, setActiveTab] = useState('');
   const [nutrients, setNutrients] = useState(null);
@@ -155,6 +122,29 @@ export default function MealAnalyzer() {
       setFormFieldsRaw([{food: ''}], true);
       setTempValues(['']);
   };
+
+  const handleKeyDown = (e, index) => {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault(); // Prevent newline or comma from appearing
+      const currentValue = tempValues[index].trim();
+
+      if (currentValue !== '') {
+        handleBlur(index);   // Optionally save the current input
+        addFields();         // Create a new field
+        setTimeout(() => {
+          // Focus the new input (next index)
+          const nextInput = inputRef.current?.querySelectorAll('input')[index + 1];
+          nextInput?.focus();
+        }, 0);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === 'tips' && tips.length === 0) {
+      handleGenerateTips();
+    }
+  }, [activeTab]);
 
   /**
    aggregateNutrients: Aggregates the quantities of each nutrient across all ingredients.
@@ -250,6 +240,7 @@ export default function MealAnalyzer() {
                             value={tempValues[index]}
                             onChange={(e) => handleChange(index, e.target.value)}
                             onBlur={() => handleBlur(index)}
+                            onKeyDown={(e) => handleKeyDown(e, index)}
                         />
                         <button type="button" onClick={() => removeFields(index)} className='removeBtn'><img src={removeIcon} alt="Button Icon" className="buttonIcon"/></button>
                     </div>
@@ -264,124 +255,102 @@ export default function MealAnalyzer() {
       <h2>Meal Analysis</h2>
   
       <div className="tabSwitcher">
-        <button className={activeTab === 'summary' ? 'active' : ''} onClick={() => setActiveTab('summary')}>Nutrition Summary</button>
-        <button className={activeTab === 'compatibility' ? 'active' : ''} onClick={() => setActiveTab('compatibility')}>Check Meal Compatibility</button>
-        <button className={activeTab === 'tips' ? 'active' : ''} onClick={() => setActiveTab('tips')}>Nutrition Tips</button>
+        <button
+          className={activeTab === 'summary' ? 'active' : ''}
+          onClick={() => setActiveTab('summary')}
+          disabled={!nutrients}
+        >
+          Nutrition Summary
+        </button>
+        <button
+          className={activeTab === 'compatibility' ? 'active' : ''}
+          onClick={() => setActiveTab('compatibility')}
+          disabled={!nutrients}
+        >
+          Check Meal Compatibility
+        </button>
+        <button
+          className={activeTab === 'tips' ? 'active' : ''}
+          onClick={() => setActiveTab('tips')}
+          disabled={!nutrients}
+        >
+          Nutrition Tips
+        </button>
       </div>
       
       <div className="tabContent">
-        {activeTab === 'summary' && nutrients && (
-          <div>
-            <p><strong>Calories:</strong> {nutrients.ENERC_KCAL?.toFixed(0) || '0'}</p>
-
-            <table border="1" cellPadding="8" style={{ marginTop: '10px', borderCollapse: 'collapse' }}>
-              <thead>
-                <tr>
-                  <th>Nutrient</th>
-                  <th>Label</th>
-                  <th>Quantity</th>
-                  <th>Unit</th>
-                </tr>
-              </thead>
-              <tbody>
-                {/* Loop through each nutrient and show its aggregated total */}
-                {Object.entries(TARGET_NUTRIENTS).map(([code, meta]) => (
-                  <tr key={code}>
-                    <td>{code}</td>
-                    <td>{meta.label}</td>
-                    <td>{nutrients[code]?.toFixed(2) || "0.00"}</td>
-                    <td>{meta.unit}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        {!nutrients ? (
+          <div className="analysisPlaceholder">
+            <p>Submit a meal to view an analysis.</p>
           </div>
-<<<<<<< Updated upstream
-        )}
-
-        {activeTab === 'compatibility' && (
-          <div>
-            <select
-              value={selectedLabel}
-              onChange={(e) => {
-                setSelectedLabel(e.target.value);
-                setCompatibilityResult(null); // Clear result on new selection
-              }}
-            >
-              <option value="">Select a diet</option>
-              {DIET_LABELS.map(label => (
-                <option key={label} value={label}>{label}</option>
-              ))}
-            </select>
-            <button onClick={handleCheckCompatibility} style={{ marginLeft: '10px' }}>Check</button>
-
-            {compatibilityResult !== null && (
-              <p style={{ marginTop: '10px' }}>
-                This meal is {compatibilityResult ? '✔' : '❌'}{' '}
-                <strong>{compatibilityResult ? 'Compatible' : 'Not Compatible'}</strong>{' '}
-                with <strong>{selectedLabel}</strong> diet.
-              </p>
-=======
         ) : (
           <>
             {activeTab === 'summary' && nutrients && (
-              <div className="nutritionLabel">
-                <div className="caloriesLine">
-                  Calories: {nutrients.ENERC_KCAL?.toFixed(0) || '0'}
-                </div>
+              <div>
+                <p><strong>Calories:</strong> {nutrients.ENERC_KCAL?.toFixed(0) || '0'}</p>
 
-                <table>
+                <table border="1" cellPadding="8" style={{ borderCollapse: 'collapse' }}>
                   <thead>
                     <tr>
-                      <th style={{ textAlign: 'left' }}>Nutrient</th>
-                      <th style={{ textAlign: 'right' }}>Amount</th>
+                      <th>Nutrient</th>
+                      <th>Label</th>
+                      <th>Quantity</th>
+                      <th>Unit</th>
                     </tr>
                   </thead>
-
                   <tbody>
-                    {NUTRIENT_GROUPS.map((group, groupIdx) => (
-                      <React.Fragment key={group.label}>
-                        <tr>
-                          <td colSpan="2" className="bold">{group.label}</td>
-                        </tr>
-                        {group.nutrients.map(code => {
-                          const meta = TARGET_NUTRIENTS[code];
-                          if (!meta) return null;
-
-                          return (
-                            <tr key={code}>
-                              <td style={{ paddingLeft: '1rem' }}>{meta.label}</td>
-                              <td className="quantity">{nutrients[code]?.toFixed(2) || "0.00"} {meta.unit}</td>
-                            </tr>
-                          );
-                        })}
-                      </React.Fragment>
+                    {/* Loop through each nutrient and show its aggregated total */}
+                    {Object.entries(TARGET_NUTRIENTS).map(([code, meta]) => (
+                      <tr key={code}>
+                        <td>{code}</td>
+                        <td>{meta.label}</td>
+                        <td>{nutrients[code]?.toFixed(2) || "0.00"}</td>
+                        <td>{meta.unit}</td>
+                      </tr>
                     ))}
                   </tbody>
                 </table>
-
-                <div className="heavy-line" />
               </div>
-
-
->>>>>>> Stashed changes
             )}
-          </div>
-        )}
 
-        {activeTab === 'tips' && (
-          <div>
-            <button onClick={handleGenerateTips}>Get Nutrition Tips</button>
-            <ul>
-              {tips.map((tip, idx) => (
-                <li key={idx}>{tip}</li>
-              ))}
-            </ul>
-          </div>
+            {activeTab === 'compatibility' && (
+              <div>
+                <select
+                  value={selectedLabel}
+                  onChange={(e) => {
+                    setSelectedLabel(e.target.value);
+                    setCompatibilityResult(null); // Clear result on new selection
+                  }}
+                >
+                  <option value="">Select a diet</option>
+                  {DIET_LABELS.map(label => (
+                    <option key={label} value={label}>{label}</option>
+                  ))}
+                </select>
+                <button onClick={handleCheckCompatibility} style={{ marginLeft: '10px' }}>Check</button>
+
+                {compatibilityResult !== null && (
+                  <p style={{ marginTop: '10px' }}>
+                    This meal is {compatibilityResult ? '✔' : '❌'}{' '}
+                    <strong>{compatibilityResult ? 'Compatible' : 'Not Compatible'}</strong>{' '}
+                    with <strong>{selectedLabel}</strong> diet.
+                  </p>
+                )}
+              </div>
+            )}
+
+            {activeTab === 'tips' && (
+              <div>
+                <ul>
+                  {tips.map((tip, idx) => (
+                    <li key={idx}>{tip}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </>
         )}
       </div>
-
-      
     </div>
 
     <div className="rightSpacer"/>

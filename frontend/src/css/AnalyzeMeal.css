@@ -1,7 +1,7 @@
 .analyzeMeal {
   padding: 2rem 5%;
   background-color: #f8f9fa;
-  height: 90vh;
+  min-height: 90vh;
   box-sizing: border-box;
   display: flex;
   justify-content: space-between;
@@ -9,8 +9,7 @@
 
 .rightSpacer {
   width: 100%;
-  max-width: 400px;
-  margin-left: 10px;
+  max-width: 500px;
 }
 
 .foodEntryContainer {
@@ -18,13 +17,8 @@
   border-radius: 12px;
   padding: 1.5rem;
   width: 100%;
-<<<<<<< Updated upstream
   max-width: 500px;
-=======
-  max-width: 400px;
   max-height: 83vh;
-  margin-right: 10px;
->>>>>>> Stashed changes
 }
 
 .foodEntryContainer h2 {
@@ -132,10 +126,11 @@
   max-width: 600px;
   width: 100%;
   height: auto;
-  max-height: 90vh;
+  max-height: 83vh;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
 }
 
 
@@ -166,12 +161,15 @@
   color: white;
 }
 
+.tabSwitcher button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 .tabContent {
   flex: 1;
   overflow-y: auto;
 }
-<<<<<<< Updated upstream
-=======
 
 .analysisPlaceholder {
   flex: 1;
@@ -183,66 +181,3 @@
   color: #888;
   font-size: 1rem;
 }
-
-/* ───── Nutrition Label ───── */
-.nutritionLabel {
-  width: 100%;
-  padding-right: 1rem;
-  font-family: Arial, sans-serif;
-  background: white;
-  color: black;
-}
-
-.nutritionLabel h3 {
-  font-size: 1.5rem;
-  font-weight: 800;
-  border-bottom: 10px solid black;
-  padding-bottom: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.nutritionLabel .caloriesLine {
-  font-size: 1.25rem;
-  font-weight: bold;
-  border-bottom: 4px solid black;
-  margin-bottom: 0.5rem;
-  padding-bottom: 0.3rem;
-}
-
-.nutritionLabel table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.nutritionLabel th, .nutritionLabel td {
-  font-size: 0.9rem;
-  padding: 4px 0;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
-}
-
-.nutritionLabel th {
-  font-weight: bold;
-}
-
-.nutritionLabel tbody tr:first-child td {
-  border-top: none;
-}
-
-.nutritionLabel td.bold {
-  font-weight: 700;
-  padding-top: 0.75rem;
-  padding-bottom: 0.25rem;
-  border-bottom: 2px solid black;
-}
-
-.nutritionLabel td.quantity {
-  text-align: right;
-}
-
-
-.nutritionLabel .heavy-line {
-  border-top: 4px solid black;
-  margin: 0.5rem 0;
-}
->>>>>>> Stashed changes
