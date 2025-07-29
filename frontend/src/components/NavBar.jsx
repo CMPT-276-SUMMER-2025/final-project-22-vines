@@ -29,7 +29,7 @@ function NavBar() {
             </Link>
             <div className="navbarLinks">
                 <NavBarButton destination={""} buttonIcon={dashboard} buttonText={"Dashboard"}/>
-                <NavBarButton destination={""} buttonIcon={logfood} buttonText={"Log Food"}/>
+                <NavBarButton destination={"logfood"} buttonIcon={logfood} buttonText={"Log Food"}/>
                 <NavBarButton destination={"analyzemeal"} buttonIcon={analyzemeal} buttonText={"Analyze Meal"}/>
                 <NavBarButton destination={""} buttonIcon={trackexercise} buttonText={"Track Exercise"}/>
                 
