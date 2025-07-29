@@ -1,0 +1,16 @@
+.dashboard {
+  padding: 2rem 5%;
+  background-color: #f8f9fa;
+  height: 90vh;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+}
+
+.dashboard > div {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  width: 500px;
+  height: 100%;
+}
