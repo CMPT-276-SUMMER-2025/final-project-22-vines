@@ -360,6 +360,7 @@ export default function MealAnalyzer() {
             {activeTab === 'compatibility' && (
               <div>
                 <select
+                  className='dietSelect'
                   value={selectedLabel}
                   onChange={(e) => {
                     setSelectedLabel(e.target.value);

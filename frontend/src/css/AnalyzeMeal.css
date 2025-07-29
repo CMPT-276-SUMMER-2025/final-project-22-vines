@@ -245,3 +245,25 @@
   border-top: 4px solid black;
   margin: 0.5rem 0;
 }
+
+/* ───── Compatibility Select Menu ───── */
+.dietSelect {
+  appearance: none;
+  font-size: 14px;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  background-color: white;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.dietSelect:hover {
+  background-color: #d4d4d4;
+}
+
+.dietSelect:focus {
+  outline: none;
+  border-color: #ccc;
+}
