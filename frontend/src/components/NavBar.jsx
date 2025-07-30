@@ -34,7 +34,7 @@ function NavBar() {
                 <NavBarButton destination={"trackexercise"} buttonIcon={trackexercise} buttonText={"Track Exercise"}/>
                 
             </div>
-            <NavBarButton destination={""} buttonIcon={settings} buttonText={"Settings"}/>
+            <NavBarButton destination={"settings"} buttonIcon={settings} buttonText={"Settings"}/>
         </nav>
     )
 }

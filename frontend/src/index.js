@@ -7,16 +7,19 @@ import { createRoot } from 'react-dom/client'
 import {BrowserRouter} from "react-router-dom";
 import App from './App.jsx'
 import { FoodLogProvider } from './contexts/FoodLogContext.jsx';
+import { TrackedGoalsProvider } from './contexts/TrackedGoalsContext';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-      <FoodLogProvider>
-        <App />
-      </FoodLogProvider>
+      <TrackedGoalsProvider>
+        <FoodLogProvider>
+          <App />
+        </FoodLogProvider>
+      </TrackedGoalsProvider>
     </BrowserRouter>
   </StrictMode>,
-)
+);
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

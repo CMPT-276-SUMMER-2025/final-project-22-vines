@@ -5,6 +5,9 @@ const FoodLogContext = createContext();
 export const FoodLogProvider = ({ children }) => {
   const [loggedNutrients, setLoggedNutrients] = useState({});
   const [foodLog, setFoodLog] = useState([]);
+  const [trackedNutrients, setTrackedNutrients] = useState([
+    'ENERC_KCAL', 'PROCNT', 'CHOCDF', 'FAT'  // default
+  ]);
 
   const addMeal = (mealText, nutrients) => {
     const timestamp = new Date().toISOString();
@@ -25,8 +28,29 @@ export const FoodLogProvider = ({ children }) => {
     setLoggedNutrients({});
   };
 
+  const addTrackedNutrient = (nutrientCode) => {
+    if (!trackedNutrients.includes(nutrientCode)) {
+      setTrackedNutrients([...trackedNutrients, nutrientCode]);
+    }
+  };
+
+  const removeTrackedNutrient = (nutrientCode) => {
+    setTrackedNutrients(trackedNutrients.filter(n => n !== nutrientCode));
+  };
+
+
   return (
-    <FoodLogContext.Provider value={{ foodLog, loggedNutrients, addMeal, resetLog }}>
+    <FoodLogContext.Provider
+      value={{
+        foodLog,
+        loggedNutrients,
+        trackedNutrients,
+        addMeal,
+        resetLog,
+        addTrackedNutrient,
+        removeTrackedNutrient
+      }}
+    >
       {children}
     </FoodLogContext.Provider>
   );

@@ -170,4 +170,52 @@
 .tabContent {
   flex: 1;
   overflow-y: auto;
+  padding-right: 1rem;
+}
+
+/* ───── Progress Bars ───── */
+.nutrient-row {
+  margin-bottom: 1rem;
+}
+
+.nutrient-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+}
+
+.progress-container {
+  width: 100%;
+  background-color: #e5e7eb; /* light gray */
+  border-radius: 4px;
+  height: 8px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  transition: width 0.3s ease;
+  border-radius: 4px;
+}
+
+.progress-green {
+  background-color: #10b929; /* green */
+}
+
+.progress-palegreen {
+  background-color: #7fc74e; /* green */
+}
+
+.progress-yellow {
+  background-color: #facc15; /* yellow */
+}
+
+.progress-orange {
+  background-color: #fa8b15; /* yellow */
+}
+
+.progress-red {
+  background-color: #ef4444; /* red */
 }

@@ -2,6 +2,7 @@ import Dashboard from './pages/Dashboard'
 import LogFood from './pages/LogFood'
 import AnalyzeMeal from './pages/AnalyzeMeal'
 import TrackExercise from './pages/TrackExercise'
+import Settings from './pages/Settings'
 import {Routes, Route} from "react-router-dom"
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
         <Route path="/logfood" element={<LogFood/>}/>
         <Route path="/analyzemeal" element={<AnalyzeMeal/>}/>
         <Route path="/trackexercise" element={<TrackExercise/>}/>
+        <Route path="/settings" element={<Settings/>}/>
       </Routes>
     </main>
   )
