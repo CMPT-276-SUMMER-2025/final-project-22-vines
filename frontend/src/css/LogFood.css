@@ -219,3 +219,58 @@
 .progress-red {
   background-color: #ef4444; /* red */
 }
+
+/* ───── Meal History Entry ───── */
+.meal-entry {
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.meal-header {
+  background-color: #ddd;
+  padding: 0.5rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+}
+
+.meal-time {
+  color: #333;
+}
+
+.delete-meal {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #666;
+}
+
+.delete-meal:hover {
+  color: #c00;
+}
+
+.meal-body {
+  background-color: #f3f3f3;
+  padding: 0.75rem 1.25rem;
+}
+
+.meal-body ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.meal-body li {
+  margin: 0.25rem 0;
+  /* padding-left: 1em; */
+  position: relative;
+}
+
+.meal-body li::before {
+  position: absolute;
+  left: 0;
+  color: #555;
+}

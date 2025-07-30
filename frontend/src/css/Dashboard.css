@@ -7,10 +7,44 @@
   justify-content: space-between;
 }
 
-.dashboard > div {
+.dashboard h2 {
+  margin-bottom: 1rem;
+}
+
+.loggedMeals {
   background: #fff;
   border-radius: 12px;
   padding: 1.5rem;
-  width: 500px;
-  height: 100%;
+  width: 100%;
+  max-width: 400px;
+  max-height: 83vh;
+  margin-right: 10px;
+}
+
+.nutritionInfo {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  max-width: 600px;
+  width: 100%;
+  height: auto;
+  max-height: 83vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.trackedExercises {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 400px;
+  max-height: 83vh;
+  margin-left: 10px;
+}
+
+.nutritionInfoContent {
+  padding-right: 1rem;
 }

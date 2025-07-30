@@ -11,22 +11,41 @@ function Dashboard() {
             <NavBar/>
             <div className="dashboard">
                 <div className="loggedMeals">
-                    <h3>Meal History</h3>
+                    <h2>Meal History</h2>
                     {foodLog.length === 0 ? (
                     <p className="placeholder">No meals logged yet.</p>
                     ) : (
                     <ul>
-                        {foodLog.map((meal, i) => (
-                        <li key={i}>
-                            {new Date(meal.timestamp).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })} – {meal.text}
-                        </li>
-                        ))}
-                    </ul>
+                          {foodLog.slice().reverse().map((entry, index) => {
+                            const time = new Date(entry.timestamp).toLocaleTimeString([], {
+                              hour: 'numeric',
+                              minute: '2-digit',
+                            });
+
+                            return (
+                              <div key={entry.timestamp} className="meal-entry">
+                                <div className="meal-header">
+                                  <span className="meal-time">{time}</span>
+                                  {/* <button className="delete-meal" onClick={() => removeMeal(entry.timestamp)}>×</button> */}
+                                </div>
+                                <div className="meal-body">
+                                  <ul>
+                                    {entry.items.map((item, i) => (
+                                      <li key={i}>• {item}</li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              </div>
+                            );
+                          })}
+
+                        </ul>
                     )}
                 </div>
                 <div className="nutritionInfo">
-                    <h3>Nutrition Summary</h3>
-                    {trackedNutrients.map(code => {
+                    <h2>Nutrition Summary</h2>
+                    <div className="nutritionInfoContent">
+                        {trackedNutrients.map(code => {
                           const label = TARGET_NUTRIENTS[code]?.label || code;
                           const unit = TARGET_NUTRIENTS[code]?.unit || '';
                           const current = Math.round(loggedNutrients[code] || 0);
@@ -56,9 +75,10 @@ function Dashboard() {
                             </div>
                           );
                         })}
+                    </div>
                 </div>
                 <div className="trackedExercises">
-                    <h3>Exercise History</h3>
+                    <h2>Exercise History</h2>
                     <p>Work in progress.</p>
                 </div>
             </div>
