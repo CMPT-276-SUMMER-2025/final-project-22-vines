@@ -22,18 +22,19 @@ function CreateProfile({ onProfileCreated }) {
         return;
       }
 
-      // Save user ID locally
+      // Save user info in localStorage
       localStorage.setItem('userId', data.id);
       localStorage.setItem('userEmail', data.email);
-      setMessage(`Profile loaded: ${data.name}`);
+      setMessage(`✅ Profile loaded: ${data.name}`);
 
+      // Notify parent
       if (onProfileCreated) {
-        onProfileCreated(data); // optional callback to parent
+        onProfileCreated(data.id);
       }
 
     } catch (err) {
       console.error(err);
-      setMessage('Server error');
+      setMessage('❌ Server error');
     }
   };
 
@@ -51,7 +52,7 @@ function CreateProfile({ onProfileCreated }) {
         <br />
         <button type="submit">Continue</button>
       </form>
-      {message && <p style={{ color: 'green' }}>{message}</p>}
+      {message && <p style={{ color: message.startsWith('✅') ? 'green' : 'crimson' }}>{message}</p>}
     </div>
   );
 }

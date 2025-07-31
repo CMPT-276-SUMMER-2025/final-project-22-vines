@@ -8,7 +8,6 @@ function WorkoutLogger({ selectedExerciseName, userId }) {
   const [date, setDate] = useState('');
   const [message, setMessage] = useState('');
 
-  // Sync exercise name when selected from search
   useEffect(() => {
     if (selectedExerciseName) {
       setExerciseName(selectedExerciseName);
@@ -20,7 +19,7 @@ function WorkoutLogger({ selectedExerciseName, userId }) {
     setMessage('');
 
     if (!userId) {
-      setMessage('Please create or load your profile first.');
+      setMessage('❌ Please create or load your profile first.');
       return;
     }
 
@@ -40,7 +39,7 @@ function WorkoutLogger({ selectedExerciseName, userId }) {
 
       const data = await res.json();
       if (!res.ok) {
-        setMessage(data.error || 'Failed to log workout.');
+        setMessage(data.error || '❌ Failed to log workout.');
       } else {
         setMessage('✅ Workout logged successfully!');
         if (!selectedExerciseName) setExerciseName('');
@@ -57,6 +56,12 @@ function WorkoutLogger({ selectedExerciseName, userId }) {
 
   return (
     <div style={{ marginTop: '2rem' }}>
+      <h3>Log a Workout</h3>
+      {!userId && (
+        <p style={{ color: 'crimson', marginBottom: '1rem' }}>
+          ⚠️ Please create or load a profile to use the workout logger.
+        </p>
+      )}
       <form onSubmit={handleSubmit}>
         <label>
           Exercise Name:{' '}
@@ -65,7 +70,7 @@ function WorkoutLogger({ selectedExerciseName, userId }) {
             required
             value={exerciseName}
             onChange={(e) => setExerciseName(e.target.value)}
-            disabled={!!selectedExerciseName}
+            disabled={!!selectedExerciseName || !userId}
           />
         </label>
         <br />
@@ -76,6 +81,7 @@ function WorkoutLogger({ selectedExerciseName, userId }) {
             required
             value={sets}
             onChange={(e) => setSets(e.target.value)}
+            disabled={!userId}
           />
         </label>
         <br />
@@ -86,6 +92,7 @@ function WorkoutLogger({ selectedExerciseName, userId }) {
             required
             value={reps}
             onChange={(e) => setReps(e.target.value)}
+            disabled={!userId}
           />
         </label>
         <br />
@@ -96,6 +103,7 @@ function WorkoutLogger({ selectedExerciseName, userId }) {
             required
             value={weight}
             onChange={(e) => setWeight(e.target.value)}
+            disabled={!userId}
           />
         </label>
         <br />
@@ -105,12 +113,14 @@ function WorkoutLogger({ selectedExerciseName, userId }) {
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
+            disabled={!userId}
           />
         </label>
         <br />
-        <button type="submit">Log Workout</button>
+        <button type="submit" disabled={!userId}>
+          Log Workout
+        </button>
       </form>
-
       {message && (
         <p style={{ color: message.includes('✅') ? 'green' : 'crimson' }}>
           {message}
