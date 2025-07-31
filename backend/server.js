@@ -1,10 +1,12 @@
-
 // Load environment variables from .env file into process.env
 require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
 const edamamRoutes = require('./routes/edamamRoutes');
+const wgerRoutes = require('./routes/wgerRoutes');
+const workoutLogRoutes = require('./routes/workoutLogRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -15,8 +17,11 @@ app.use(cors());
 // Enable parsing of JSON request bodies
 app.use(express.json());
 
-// Mount Edamam-related API routes at /api/edamam
+// Mount API routes
+app.use('/api/users', userRoutes);
 app.use('/api/edamam', edamamRoutes);
+app.use('/api/wger', wgerRoutes);
+app.use('/api/workouts', workoutLogRoutes); 
 
-// Start the server and listen on the specified port
+// Start the server
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
