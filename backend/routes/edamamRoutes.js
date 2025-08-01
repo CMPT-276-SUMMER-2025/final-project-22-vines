@@ -1,4 +1,3 @@
-
 const express = require('express');
 const router = express.Router();
 
@@ -9,17 +8,18 @@ const {
 } = require('../controllers/mealController');
 
 /**
- POST /analyze
- Route to analyze a user-submitted meal.
- Expects a JSON body with 'title' (string) and 'ingr' (array of strings).
- Calls analyzeMealController to process the input using Edamam API.
+ * @route POST /analyze
+ * @description Analyze a user-submitted meal using the Edamam Nutrition Analysis API.
+ * @body {string} title - Title of the meal
+ * @body {string[]} ingr - List of ingredient strings
+ * @returns {Object} JSON object with nutritional analysis
  */
 router.post('/analyze', analyzeMealController);
 
 /**
-GET /logs
-Route to fetch the latest analyzed meal log from Firestore.
-Calls getLatestMealController to return the most recent entry.
+ * @route GET /logs
+ * @description Retrieve the latest analyzed meal log from Firestore.
+ * @returns {Object} JSON object of the latest meal log
  */
 router.get('/logs', getLatestMealController);
 

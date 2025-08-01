@@ -6,6 +6,13 @@ import {
   fetchMuscles
 } from '../api/wger';
 
+/**
+ * ExerciseSearch Component
+ * Allows users to filter and search for exercises by category, equipment, or muscle.
+ * Displays matching exercises with image and description.
+ *
+ * @param {Function} onSelectExercise - Callback when user selects "Log This Workout"
+ */
 function ExerciseSearch({ onSelectExercise }) {
   const [categories, setCategories] = useState([]);
   const [equipment, setEquipment] = useState([]);
@@ -15,6 +22,9 @@ function ExerciseSearch({ onSelectExercise }) {
   const [loading, setLoading] = useState(false);
   const [noResults, setNoResults] = useState(false);
 
+  /**
+   * Load available filter options from Wger API on component mount
+   */
   useEffect(() => {
     async function loadFilters() {
       try {
@@ -27,16 +37,23 @@ function ExerciseSearch({ onSelectExercise }) {
         setEquipment(eq);
         setMuscles(mus);
       } catch (err) {
-        console.error(err);
+        console.error('Error loading filter options:', err.message);
       }
     }
+
     loadFilters();
   }, []);
 
+  /**
+   * Updates the filters state when a dropdown selection changes
+   */
   const handleChange = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
   };
 
+  /**
+   * Fetches filtered exercises from the API and updates results
+   */
   const handleSearch = async () => {
     setLoading(true);
     setNoResults(false);
@@ -45,7 +62,7 @@ function ExerciseSearch({ onSelectExercise }) {
       setResults(data);
       setNoResults(data.length === 0);
     } catch (err) {
-      console.error(err);
+      console.error('Error fetching exercises:', err.message);
     } finally {
       setLoading(false);
     }
@@ -53,6 +70,7 @@ function ExerciseSearch({ onSelectExercise }) {
 
   return (
     <div style={{ padding: '1rem' }}>
+      {/* Filter selection dropdowns */}
       <div>
         <label>Category: </label>
         <select name="category" value={filters.category} onChange={handleChange}>
@@ -81,6 +99,7 @@ function ExerciseSearch({ onSelectExercise }) {
         <button onClick={handleSearch}>Search</button>
       </div>
 
+      {/* Loading and No Results Messages */}
       {loading && <p>Loading...</p>}
       {noResults && !loading && (
         <p style={{ color: 'crimson', fontWeight: 'bold' }}>
@@ -88,11 +107,13 @@ function ExerciseSearch({ onSelectExercise }) {
         </p>
       )}
 
+      {/* Display Results */}
       <div style={{ marginTop: '1rem' }}>
         {results.length > 0 && results.map((exercise) => (
           <div key={exercise.id} style={{ borderBottom: '1px solid #ccc', marginBottom: '1rem' }}>
             <h4>{exercise.name}</h4>
 
+            {/* Optional image display */}
             {exercise.image && (
               <img
                 src={exercise.image}
@@ -101,12 +122,14 @@ function ExerciseSearch({ onSelectExercise }) {
               />
             )}
 
+            {/* Optional HTML-formatted description */}
             {exercise.description && exercise.description.trim() !== '' ? (
               <div dangerouslySetInnerHTML={{ __html: exercise.description }} />
             ) : (
               <p style={{ color: 'gray' }}><i>No description available</i></p>
             )}
 
+            {/* Button to log the selected exercise */}
             <button
               onClick={() => onSelectExercise(exercise.name)}
               style={{ marginTop: '0.5rem' }}

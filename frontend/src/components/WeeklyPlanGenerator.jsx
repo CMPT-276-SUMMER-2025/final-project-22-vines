@@ -4,39 +4,52 @@ import GoalSelector from './GoalSelector';
 import PlanDisplay from './PlanDisplay';
 import { matchExercisesToGoal } from '../utils/goals';
 
+/**
+ * WeeklyPlanGenerator Component:
+ * Allows users to select a fitness goal and generates a beginner-friendly
+ * 7-day workout plan based on that goal using Wger exercise data.
+ */
 const WeeklyPlanGenerator = () => {
   const [selectedGoal, setSelectedGoal] = useState('');
   const [allExercises, setAllExercises] = useState([]);
   const [weeklyPlan, setWeeklyPlan] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Fetch all exercises on mount
+  /**
+   * Fetch all available exercises on component mount
+   */
   useEffect(() => {
     const fetchExercises = async () => {
       try {
         const res = await axios.get('/api/weeklyplan/exercises');
         setAllExercises(res.data);
       } catch (err) {
-        console.error('Error fetching exercises:', err);
+        console.error('Error fetching exercises:', err.message);
       }
     };
+
     fetchExercises();
   }, []);
 
-  // Rebuild plan when goal is selected
+  /**
+   * Build weekly plan when a goal is selected and data is ready
+   */
   useEffect(() => {
     if (!selectedGoal || allExercises.length === 0) return;
 
     const buildPlan = async () => {
+      // Filter and prioritize exercises based on goal and data quality
       const matched = matchExercisesToGoal(allExercises, selectedGoal);
       const withImages = matched.filter(ex => ex.image && ex.description?.trim());
       const withoutImages = matched.filter(ex => !ex.image || !ex.description?.trim());
       const prioritized = [...withImages, ...withoutImages];
 
+      // Create a 7-day plan, with 2 exercises per day
       const plan = [];
       for (let i = 0; i < 7; i++) {
         const dayExercises = prioritized.slice(i * 2, i * 2 + 2);
         if (dayExercises.length < 2) break;
+
         plan.push({
           day: `Day ${i + 1}`,
           exercises: dayExercises,
@@ -47,23 +60,27 @@ const WeeklyPlanGenerator = () => {
       setLoading(false);
     };
 
-    // Start spinner immediately
+    // Reset and show spinner briefly before rebuilding plan
     setWeeklyPlan([]);
     setLoading(true);
-    setTimeout(buildPlan, 100); // allow spinner to render
+    setTimeout(buildPlan, 100); // Let spinner render
   }, [selectedGoal, allExercises]);
 
+  /**
+   * Opens browser print dialog to print the workout plan
+   */
   const handlePrint = () => {
     window.print();
   };
 
   return (
     <div>
+      {/* Goal selector dropdown */}
       <GoalSelector
         selectedGoal={selectedGoal}
         setSelectedGoal={(goal) => {
           setSelectedGoal(goal);
-          setLoading(true); // show spinner immediately
+          setLoading(true); // Show spinner immediately
         }}
       />
 
@@ -73,6 +90,7 @@ const WeeklyPlanGenerator = () => {
         </p>
       ) : (
         <>
+          {/* Show print button only when plan is generated */}
           {weeklyPlan.length > 0 && (
             <button
               onClick={handlePrint}
@@ -90,6 +108,7 @@ const WeeklyPlanGenerator = () => {
             </button>
           )}
 
+          {/* Display the plan */}
           <div id="printable">
             <PlanDisplay weeklyPlan={weeklyPlan} />
           </div>

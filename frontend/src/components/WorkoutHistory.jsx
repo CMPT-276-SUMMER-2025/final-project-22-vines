@@ -1,19 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 function WorkoutHistory({ phone, refreshTrigger }) {
   const [logs, setLogs] = useState([]);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const fetchLogs = async () => {
+  // useCallback ensures stable reference for useEffect dependencies
+  const fetchLogs = useCallback(async () => {
     if (!phone) return;
     setLoading(true);
     try {
       const res = await fetch(`http://localhost:5000/api/workoutLogs/${phone}`);
       const data = await res.json();
 
-      // Sort logs by timestamp (latest first)
-      const sortedLogs = data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      const sortedLogs = data.sort(
+        (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
+      );
 
       setLogs(sortedLogs);
       setVisible(true);
@@ -22,31 +24,16 @@ function WorkoutHistory({ phone, refreshTrigger }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [phone]);
 
-  // Refresh logs when refreshTrigger changes (example after logging a workout)
-useEffect(() => {
-  if (!phone) return;
+  // Fetch logs on refresh trigger (e.g., after logging a new workout)
+  useEffect(() => {
+    if (!phone) return;
+    setVisible(true);
+    fetchLogs();
+  }, [refreshTrigger, phone, fetchLogs]);
 
-  setVisible(true);
-
-  const fetchLogs = async () => {
-    try {
-      const res = await fetch(`http://localhost:5000/api/workoutLogs/${phone}`);
-      const data = await res.json();
-      const sortedLogs = data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-      setLogs(sortedLogs);
-    } catch (err) {
-      console.error('Failed to fetch workout logs:', err);
-    }
-  };
-
-  fetchLogs();
-}, [refreshTrigger, phone]);
-
-
-
-  // Reset logs when phone changes
+  // Clear logs on phone change
   useEffect(() => {
     setLogs([]);
     setVisible(false);
