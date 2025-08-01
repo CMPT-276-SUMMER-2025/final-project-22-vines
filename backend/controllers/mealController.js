@@ -1,5 +1,5 @@
 const axios = require('axios');
-const db = require('../firebase');
+const { db } = require('../firebase'); 
 
 const analyzeMealController = async (req, res) => {
   try {
