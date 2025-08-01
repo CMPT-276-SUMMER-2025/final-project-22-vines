@@ -45,11 +45,6 @@ const workoutGoals = [
     id: "crossfit",
     label: "CrossFit / HIIT",
     keywords: ["snatch", "clean", "burpee", "jump", "kettlebell", "slam", "push press"]
-  },
-  {
-    id: "agility",
-    label: "Agility Training",
-    keywords: ["ladder", "hop", "shuffle", "zig zag", "cone", "quick feet"]
   }
 ];
 

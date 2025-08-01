@@ -5,6 +5,7 @@ import CreateProfile from './components/CreateProfile';
 import WorkoutLogger from './components/WorkoutLogger';
 import WorkoutHistory from './components/WorkoutHistory';
 import WeeklyPlanGenerator from './components/WeeklyPlanGenerator';
+import './App.css'; 
 
 function App() {
   const [selectedExerciseName, setSelectedExerciseName] = useState('');
