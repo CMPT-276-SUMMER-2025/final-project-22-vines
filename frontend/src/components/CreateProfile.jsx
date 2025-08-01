@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 
 function CreateProfile({ onProfileCreated }) {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
 
   const handleSubmit = async (e) => {
@@ -13,21 +12,21 @@ function CreateProfile({ onProfileCreated }) {
       const res = await fetch('http://localhost:5000/api/users', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email })
+        body: JSON.stringify({ phone })  // send only phone now
       });
 
       const data = await res.json();
+
       if (!res.ok) {
         setMessage(data.error || 'Error creating profile');
         return;
       }
 
-      localStorage.setItem('userId', data.id);
-      localStorage.setItem('userEmail', data.email);
-      setMessage(`✅ Profile loaded: ${data.name}`);
+      localStorage.setItem('phone', data.id);  // store phone in localStorage
+      setMessage(`✅ Profile loaded: ${data.id}`);
 
       if (onProfileCreated) {
-        onProfileCreated(data);
+        onProfileCreated(data.id);
       }
 
     } catch (err) {
@@ -41,11 +40,13 @@ function CreateProfile({ onProfileCreated }) {
       <h3>Create or Load Profile</h3>
       <form onSubmit={handleSubmit}>
         <label>
-          Name: <input type="text" required value={name} onChange={(e) => setName(e.target.value)} />
-        </label>
-        <br />
-        <label>
-          Email: <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+          Phone Number: <input
+  type="tel"
+  required
+  value={phone}
+  onChange={(e) => setPhone(e.target.value.replace(/\D/g, ''))} // remove non-digits
+  placeholder="Enter phone number"
+ />
         </label>
         <br />
         <button type="submit">Continue</button>

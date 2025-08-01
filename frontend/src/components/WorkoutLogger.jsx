@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-function WorkoutLogger({ userEmail, selectedExerciseName, userId }) {
+function WorkoutLogger({ phone, selectedExerciseName }) {
   const [exerciseName, setExerciseName] = useState('');
   const [sets, setSets] = useState('');
   const [reps, setReps] = useState('');
@@ -8,10 +8,16 @@ function WorkoutLogger({ userEmail, selectedExerciseName, userId }) {
   const [date, setDate] = useState('');
   const [message, setMessage] = useState('');
 
-  const isDisabled = !userEmail;
+  const isDisabled = !phone;
+
+  useEffect(() => {
+    if (selectedExerciseName) {
+      setExerciseName(selectedExerciseName);
+    }
+  }, [selectedExerciseName]);
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // prevent page reload
+    e.preventDefault();
     setMessage('');
 
     if (!exerciseName || !sets || !reps || !weight || !date) {
@@ -24,7 +30,7 @@ function WorkoutLogger({ userEmail, selectedExerciseName, userId }) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          userEmail,
+          phone,
           exerciseName,
           sets: Number(sets),
           reps: Number(reps),
@@ -39,7 +45,6 @@ function WorkoutLogger({ userEmail, selectedExerciseName, userId }) {
         setMessage(`❌ Error: ${data.error || 'Something went wrong.'}`);
       } else {
         setMessage('✅ Workout logged successfully!');
-        // Clear the form
         setExerciseName('');
         setSets('');
         setReps('');

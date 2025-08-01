@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function WorkoutHistory({ userEmail }) {
+function WorkoutHistory({ phone }) {
   const [logs, setLogs] = useState([]);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -8,7 +8,7 @@ function WorkoutHistory({ userEmail }) {
   const fetchLogs = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`http://localhost:5000/api/workoutLogs/${userEmail}`);
+      const res = await fetch(`http://localhost:5000/api/workoutLogs/${phone}`);
       const data = await res.json();
       setLogs(data);
       setVisible(true);

@@ -1,16 +1,15 @@
-const admin = require('firebase-admin');
-const db = admin.firestore();
+const { db } = require('../firebase');
 
 exports.logWorkout = async (req, res) => {
   try {
-    const { userEmail, exerciseName, sets, reps, weight, date } = req.body;
+    const { phone, exerciseName, sets, reps, weight, date } = req.body;
 
-    if (!userEmail || !exerciseName || !sets || !reps || !weight || !date) {
+    if (!phone || !exerciseName || !sets || !reps || !weight || !date) {
       return res.status(400).json({ error: 'All fields are required.' });
     }
 
     const log = {
-      userEmail,
+      phone,
       exerciseName,
       sets,
       reps,
@@ -30,15 +29,16 @@ exports.logWorkout = async (req, res) => {
 
 exports.getWorkoutLogs = async (req, res) => {
   try {
-    const userEmail = req.params.userEmail;
-    const snapshot = await db.collection('workoutLogs')
-      .where('userEmail', '==', userEmail)
-      .orderBy('date', 'desc') // optional
+    const phone = req.params.phone;
+    const logsSnapshot = await db.collection('workoutLogs')
+      .where('phone', '==', phone)
+      //.orderBy('date', 'desc') // optional
       .get();
 
-    const logs = snapshot.docs.map(doc => doc.data());
+    const logs = logsSnapshot.docs.map(doc => doc.data());
     res.status(200).json(logs);
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch workout logs' });
+  } catch (error) {
+    console.error('Error fetching workout logs:', error);
+    res.status(500).json({ error: 'Server error while fetching logs' });
   }
 };

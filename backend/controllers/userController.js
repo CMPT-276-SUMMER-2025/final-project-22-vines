@@ -1,23 +1,26 @@
-const db = require('../firebase');
+const admin = require('firebase-admin');
+const db = admin.firestore();
 
-function sanitizeEmail(email) {
-  return email.toLowerCase().replace(/[^a-z0-9]/g, '');
-}
-
-exports.createOrLoadUser = async (req, res) => {
-  const { name, email } = req.body;
-  const sanitizedEmail = sanitizeEmail(email);
-
+exports.createUser = async (req, res) => {
   try {
-    const userRef = db.collection('users').doc(sanitizedEmail);
-    const userDoc = await userRef.get();
+    const { phone } = req.body;
 
-    if (!userDoc.exists) {
-      await userRef.set({ name, email });
+    if (!phone) {
+      return res.status(400).json({ error: 'Phone number is required' });
     }
 
-    res.status(200).json({ id: sanitizedEmail, name, email });
+    // Check if user already exists
+    const userRef = db.collection('users').doc(phone);
+    const doc = await userRef.get();
+
+    if (!doc.exists) {
+      // Create user if not exists
+      await userRef.set({ phone });
+    }
+
+    res.status(200).json({ id: phone }); // Send back phone as ID
   } catch (err) {
-    res.status(500).json({ error: 'Failed to create/load user' });
+    console.error('Error creating/loading user:', err);
+    res.status(500).json({ error: 'Server error while creating/loading user' });
   }
 };
