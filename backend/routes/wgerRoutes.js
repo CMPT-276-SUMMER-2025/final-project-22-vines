@@ -4,7 +4,7 @@ const {
   searchExercises,
   getExerciseCategories,
   getMuscles,
-  getEquipment
+  getEquipment,
 } = require('../controllers/wgerController');
 
 // Route to search exercises
