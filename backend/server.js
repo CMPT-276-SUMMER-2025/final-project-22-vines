@@ -21,6 +21,7 @@ app.use(express.json());
 app.use('/api/users', userRoutes);
 app.use('/api/edamam', edamamRoutes);
 app.use('/api/wger', wgerRoutes);
+app.use('/api/workoutLogs', workoutLogRoutes);
 app.use('/api/workouts', workoutLogRoutes); 
 
 // Start the server

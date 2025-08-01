@@ -22,14 +22,12 @@ function CreateProfile({ onProfileCreated }) {
         return;
       }
 
-      // Save user info in localStorage
       localStorage.setItem('userId', data.id);
       localStorage.setItem('userEmail', data.email);
       setMessage(`✅ Profile loaded: ${data.name}`);
 
-      // Notify parent
       if (onProfileCreated) {
-        onProfileCreated(data.id);
+        onProfileCreated(data);
       }
 
     } catch (err) {

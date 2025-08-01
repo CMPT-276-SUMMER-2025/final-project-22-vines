@@ -3,19 +3,21 @@ import MealAnalyzer from './components/MealAnalyzer';
 import ExerciseSearch from './components/ExerciseSearch';
 import CreateProfile from './components/CreateProfile';
 import WorkoutLogger from './components/WorkoutLogger';
+import WorkoutHistory from './components/WorkoutHistory';
 
 function App() {
   const [selectedExerciseName, setSelectedExerciseName] = useState('');
   const [userId, setUserId] = useState(null);
+  const [userEmail, setUserEmail] = useState(localStorage.getItem('userEmail') || null);
 
   useEffect(() => {
-    // Load userId from localStorage on mount
     const storedId = localStorage.getItem('userId');
     if (storedId) setUserId(storedId);
   }, []);
 
   const handleProfileCreated = (user) => {
-    setUserId(user.id); // Update App state when profile is created/loaded
+    setUserId(user.id);
+    setUserEmail(user.email);
   };
 
   return (
@@ -36,7 +38,15 @@ function App() {
 
       <section>
         <h2>Workout Logger</h2>
-        <WorkoutLogger selectedExerciseName={selectedExerciseName} userId={userId} />
+        <WorkoutLogger
+          selectedExerciseName={selectedExerciseName}
+          userId={userId}
+          userEmail={userEmail}
+        />
+      </section>
+
+      <section>
+        <WorkoutHistory userEmail={userEmail} />
       </section>
     </div>
   );

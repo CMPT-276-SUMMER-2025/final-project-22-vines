@@ -1,31 +1,44 @@
-const db = require('../firebase');
+const admin = require('firebase-admin');
+const db = admin.firestore();
 
-// POST /api/workouts
-exports.saveWorkoutLog = async (req, res) => {
-  const { userId, exerciseName, sets, reps, weight, date } = req.body;
-
-  // Validate required fields
-  if (!userId || !exerciseName || !sets || !reps || !weight) {
-    return res.status(400).json({ error: 'Missing required workout log fields.' });
-  }
-
+exports.logWorkout = async (req, res) => {
   try {
-    // Save the workout log to Firestore
-    const docRef = await db.collection('workoutLogs').add({
-      userId,
+    const { userEmail, exerciseName, sets, reps, weight, date } = req.body;
+
+    if (!userEmail || !exerciseName || !sets || !reps || !weight || !date) {
+      return res.status(400).json({ error: 'All fields are required.' });
+    }
+
+    const log = {
+      userEmail,
       exerciseName,
       sets,
       reps,
       weight,
-      date: date || new Date().toISOString() // fallback if date is missing
-    });
+      date,
+      timestamp: new Date().toISOString()
+    };
 
-    res.status(201).json({
-      id: docRef.id,
-      message: 'Workout log saved successfully.'
-    });
-  } catch (error) {
-    console.error('Error saving workout log:', error);
-    res.status(500).json({ error: 'Failed to save workout log.' });
+    await db.collection('workoutLogs').add(log);
+    res.status(201).json({ message: 'Workout logged successfully' });
+
+  } catch (err) {
+    console.error('Error logging workout:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+exports.getWorkoutLogs = async (req, res) => {
+  try {
+    const userEmail = req.params.userEmail;
+    const snapshot = await db.collection('workoutLogs')
+      .where('userEmail', '==', userEmail)
+      .orderBy('date', 'desc') // optional
+      .get();
+
+    const logs = snapshot.docs.map(doc => doc.data());
+    res.status(200).json(logs);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch workout logs' });
   }
 };

@@ -1,128 +1,124 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
-function WorkoutLogger({ selectedExerciseName, userId }) {
-  const [exerciseName, setExerciseName] = useState(selectedExerciseName || '');
+function WorkoutLogger({ userEmail, selectedExerciseName, userId }) {
+  const [exerciseName, setExerciseName] = useState('');
   const [sets, setSets] = useState('');
   const [reps, setReps] = useState('');
   const [weight, setWeight] = useState('');
   const [date, setDate] = useState('');
   const [message, setMessage] = useState('');
 
-  useEffect(() => {
-    if (selectedExerciseName) {
-      setExerciseName(selectedExerciseName);
-    }
-  }, [selectedExerciseName]);
+  const isDisabled = !userEmail;
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // prevent page reload
     setMessage('');
 
-    if (!userId) {
-      setMessage('❌ Please create or load your profile first.');
+    if (!exerciseName || !sets || !reps || !weight || !date) {
+      setMessage('⚠️ Please fill in all fields.');
       return;
     }
 
     try {
-      const res = await fetch('http://localhost:5000/api/workouts', {
+      const response = await fetch('http://localhost:5000/api/workoutLogs', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          userId,
+          userEmail,
           exerciseName,
           sets: Number(sets),
           reps: Number(reps),
           weight: Number(weight),
-          date: date || new Date().toISOString().split('T')[0],
-        }),
+          date
+        })
       });
 
-      const data = await res.json();
-      if (!res.ok) {
-        setMessage(data.error || '❌ Failed to log workout.');
+      const data = await response.json();
+
+      if (!response.ok) {
+        setMessage(`❌ Error: ${data.error || 'Something went wrong.'}`);
       } else {
         setMessage('✅ Workout logged successfully!');
-        if (!selectedExerciseName) setExerciseName('');
+        // Clear the form
+        setExerciseName('');
         setSets('');
         setReps('');
         setWeight('');
         setDate('');
       }
-    } catch (error) {
-      console.error(error);
-      setMessage('❌ Server error while logging workout.');
+    } catch (err) {
+      console.error(err);
+      setMessage('❌ Server error.');
     }
   };
 
   return (
-    <div style={{ marginTop: '2rem' }}>
-      <h3>Log a Workout</h3>
-      {!userId && (
-        <p style={{ color: 'crimson', marginBottom: '1rem' }}>
+    <div>
+      <h2>Workout Logger</h2>
+      <h4>Log a Workout</h4>
+
+      {isDisabled && (
+        <p style={{ color: 'crimson' }}>
           ⚠️ Please create or load a profile to use the workout logger.
         </p>
       )}
+
       <form onSubmit={handleSubmit}>
         <label>
-          Exercise Name:{' '}
+          Exercise Name:
           <input
             type="text"
-            required
             value={exerciseName}
             onChange={(e) => setExerciseName(e.target.value)}
-            disabled={!!selectedExerciseName || !userId}
+            disabled={isDisabled}
           />
         </label>
         <br />
         <label>
-          Sets:{' '}
+          Sets:
           <input
             type="number"
-            required
             value={sets}
             onChange={(e) => setSets(e.target.value)}
-            disabled={!userId}
+            disabled={isDisabled}
           />
         </label>
         <br />
         <label>
-          Reps:{' '}
+          Reps:
           <input
             type="number"
-            required
             value={reps}
             onChange={(e) => setReps(e.target.value)}
-            disabled={!userId}
+            disabled={isDisabled}
           />
         </label>
         <br />
         <label>
-          Weight (lbs):{' '}
+          Weight (lbs):
           <input
             type="number"
-            required
             value={weight}
             onChange={(e) => setWeight(e.target.value)}
-            disabled={!userId}
+            disabled={isDisabled}
           />
         </label>
         <br />
         <label>
-          Date:{' '}
+          Date:
           <input
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            disabled={!userId}
+            disabled={isDisabled}
           />
         </label>
         <br />
-        <button type="submit" disabled={!userId}>
-          Log Workout
-        </button>
+        <button type="submit" disabled={isDisabled}>Log Workout</button>
       </form>
+
       {message && (
-        <p style={{ color: message.includes('✅') ? 'green' : 'crimson' }}>
+        <p style={{ marginTop: '1rem', color: message.startsWith('✅') ? 'green' : 'crimson' }}>
           {message}
         </p>
       )}

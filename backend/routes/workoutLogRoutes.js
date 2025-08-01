@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { saveWorkoutLog } = require('../controllers/workoutLogController');
 
-// POST: Save a workout log
-router.post('/', saveWorkoutLog);
+const { logWorkout, getWorkoutLogs } = require('../controllers/workoutLogController'); // ✅ Add getWorkoutLogs here
+
+router.post('/', logWorkout);
+router.get('/:userEmail', getWorkoutLogs);
 
 module.exports = router;
