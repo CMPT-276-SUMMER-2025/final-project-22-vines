@@ -1,10 +1,8 @@
-
 import React, { useState } from 'react';
 import { analyzeMeal, getLatestMeal } from '../api/mealAPI';
 import { DIET_LABELS, checkDietCompatibility } from '../utils/dietLabels';
 import { generateNutritionTips } from '../utils/nutritionTips';
 
-// Nutrients to be shown in the table with human-readable labels and units
 const TARGET_NUTRIENTS = {
   "SUGAR.added": { label: "Added sugar", unit: "g" },
   CA: { label: "Calcium, Ca", unit: "mg" },
@@ -50,24 +48,11 @@ export default function MealAnalyzer() {
   const [compatibilityResult, setCompatibilityResult] = useState(null);
   const [tips, setTips] = useState([]);
 
-  /**
-   aggregateNutrients: Aggregates the quantities of each nutrient across all ingredients.
-   
-   INPUT:
-   ingredients (array): An array of ingredient objects from Edamam
-   
-   OUTPUT:
-   totals (object): A map of nutrient codes to total quantities
-   */
   const aggregateNutrients = (ingredients) => {
     const totals = {};
-
-    // Initialize totals for all target nutrients to 0
     for (const code of Object.keys(TARGET_NUTRIENTS)) {
       totals[code] = 0;
     }
-
-    // Loop through each ingredient and accumulate its nutrient values
     ingredients.forEach(ing => {
       const parsed = ing?.parsed?.[0]?.nutrients || {};
       for (const code of Object.keys(TARGET_NUTRIENTS)) {
@@ -76,38 +61,32 @@ export default function MealAnalyzer() {
         }
       }
     });
-
     return totals;
   };
 
-  /**
-   handleAnalyze
-   Sends the meal to the backend for analysis and updates state with the results.
-   */
   const handleAnalyze = async () => {
     await analyzeMeal(mealInput);
     const latest = await getLatestMeal();
+    console.log("Fetched meal:", latest);
+
+    if (!latest || !Array.isArray(latest.ingredients)) {
+      console.error("Missing or invalid 'ingredients' in latest meal:", latest);
+      alert("Something went wrong analyzing the meal. Please try again.");
+      return;
+    }
 
     const totals = aggregateNutrients(latest.ingredients);
     setNutrients(totals);
-    setCompatibilityResult(null); // Reset compatibility check result
-    setTips([]); // Clear existing tips
+    setCompatibilityResult(null);
+    setTips([]);
   };
 
-  /**
-   handleCheckCompatibility
-   Checks whether the analyzed meal matches the selected diet label.
-   */
   const handleCheckCompatibility = () => {
     if (!selectedLabel || !nutrients) return;
     const result = checkDietCompatibility(selectedLabel, nutrients);
     setCompatibilityResult(result);
   };
 
-  /**
-   handleGenerateTips
-   Generates nutrition tips based on the aggregated nutrients.
-   */
   const handleGenerateTips = () => {
     if (!nutrients) return;
     const newTips = generateNutritionTips(nutrients);
@@ -117,7 +96,6 @@ export default function MealAnalyzer() {
   return (
     <div>
       <h2>Enter Your Meal</h2>
-      {/* Input field for user to type in ingredients */}
       <textarea
         value={mealInput}
         onChange={(e) => setMealInput(e.target.value)}
@@ -128,7 +106,6 @@ export default function MealAnalyzer() {
       <br />
       <button onClick={handleAnalyze}>Analyze Meal</button>
 
-      {/* Display nutrition results if available */}
       {nutrients && (
         <div style={{ marginTop: '30px' }}>
           <h3>Nutrition Summary</h3>
@@ -144,7 +121,6 @@ export default function MealAnalyzer() {
               </tr>
             </thead>
             <tbody>
-              {/* Loop through each nutrient and show its aggregated total */}
               {Object.entries(TARGET_NUTRIENTS).map(([code, meta]) => (
                 <tr key={code}>
                   <td>{code}</td>
@@ -156,14 +132,13 @@ export default function MealAnalyzer() {
             </tbody>
           </table>
 
-          {/* Meal Compatibility Section */}
           <div style={{ marginTop: '30px' }}>
             <h3>Check Meal Compatibility</h3>
             <select
               value={selectedLabel}
               onChange={(e) => {
                 setSelectedLabel(e.target.value);
-                setCompatibilityResult(null); // Clear result on new selection
+                setCompatibilityResult(null);
               }}
             >
               <option value="">Select a diet</option>
@@ -172,17 +147,13 @@ export default function MealAnalyzer() {
               ))}
             </select>
             <button onClick={handleCheckCompatibility} style={{ marginLeft: '10px' }}>Check</button>
-
             {compatibilityResult !== null && (
               <p style={{ marginTop: '10px' }}>
-                This meal is {compatibilityResult ? '✔' : '❌'}{' '}
-                <strong>{compatibilityResult ? 'Compatible' : 'Not Compatible'}</strong>{' '}
-                with <strong>{selectedLabel}</strong> diet.
+                This meal is {compatibilityResult ? '✔' : '❌'} <strong>{compatibilityResult ? 'Compatible' : 'Not Compatible'}</strong> with <strong>{selectedLabel}</strong> diet.
               </p>
             )}
           </div>
 
-          {/* Nutrition Tips Section */}
           <div style={{ marginTop: '30px' }}>
             <h3>Nutrition Tips</h3>
             <button onClick={handleGenerateTips}>Get Nutrition Tips</button>
