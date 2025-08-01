@@ -25,6 +25,8 @@ app.use('/api/edamam', edamamRoutes);
 app.use('/api/wger', wgerRoutes);
 app.use('/api/workoutLogs', workoutLogRoutes);
 app.use('/api/workouts', workoutLogRoutes); 
-app.use('/api/weekly-plan', weeklyPlanRoutes); 
+console.log('Mounting /api/weeklyplan route...');// for testing purposes
+app.use('/api/weeklyplan', weeklyPlanRoutes);
+
 // Start the server
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

@@ -4,12 +4,12 @@ import ExerciseSearch from './components/ExerciseSearch';
 import CreateProfile from './components/CreateProfile';
 import WorkoutLogger from './components/WorkoutLogger';
 import WorkoutHistory from './components/WorkoutHistory';
+import WeeklyPlanGenerator from './components/WeeklyPlanGenerator';
 
 function App() {
   const [selectedExerciseName, setSelectedExerciseName] = useState('');
   const [phone, setPhone] = useState(localStorage.getItem('phone') || null);
-
-  const [refreshKey, setRefreshKey] = useState(0); // new state
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     const storedPhone = localStorage.getItem('phone');
@@ -20,7 +20,6 @@ function App() {
     setPhone(id);
   };
 
-  // Triggered after a new workout is logged
   const handleWorkoutLogged = () => {
     setRefreshKey(prev => prev + 1);
   };
@@ -46,15 +45,20 @@ function App() {
         <WorkoutLogger
           selectedExerciseName={selectedExerciseName}
           phone={phone}
-          onWorkoutLogged={handleWorkoutLogged} // passed here
+          onWorkoutLogged={handleWorkoutLogged}
         />
       </section>
 
       <section>
         <WorkoutHistory
           phone={phone}
-          refreshTrigger={refreshKey} // passed here
+          refreshTrigger={refreshKey}
         />
+      </section>
+
+      <section>
+        <h2>Weekly Workout Plan</h2>
+        <WeeklyPlanGenerator />
       </section>
     </div>
   );
