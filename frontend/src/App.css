@@ -36,3 +36,26 @@
     transform: rotate(360deg);
   }
 }
+
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+
+  #printable, #printable * {
+    visibility: visible !important;
+  }
+
+  #printable {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 20px;
+    background: white;
+  }
+
+  button, .print-button {
+    display: none !important;
+  }
+}

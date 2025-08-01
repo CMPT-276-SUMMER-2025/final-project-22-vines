@@ -1,10 +1,9 @@
-
 import React, { useState } from 'react';
 import { analyzeMeal, getLatestMeal } from '../api/mealAPI';
 import { DIET_LABELS, checkDietCompatibility } from '../utils/dietLabels';
 import { generateNutritionTips } from '../utils/nutritionTips';
 
-// Nutrients to be shown in the table with human-readable labels and units
+// Nutrient codes and their display metadata
 const TARGET_NUTRIENTS = {
   "SUGAR.added": { label: "Added sugar", unit: "g" },
   CA: { label: "Calcium, Ca", unit: "mg" },
@@ -51,24 +50,20 @@ export default function MealAnalyzer() {
   const [tips, setTips] = useState([]);
 
   /**
-   aggregateNutrients: Aggregates the quantities of each nutrient across all ingredients.
-   
-   INPUT:
-   ingredients (array): An array of ingredient objects from Edamam
-   
-   OUTPUT:
-   totals (object): A map of nutrient codes to total quantities
+   * Aggregates nutrients from the ingredient data returned by Edamam.
+   * Initializes totals to zero and sums nutrient values by code.
+   *
+   * @param {Array} ingredients - Edamam ingredient list
+   * @returns {Object} totals - Aggregated nutrients
    */
   const aggregateNutrients = (ingredients) => {
     const totals = {};
-
-    // Initialize totals for all target nutrients to 0
     for (const code of Object.keys(TARGET_NUTRIENTS)) {
       totals[code] = 0;
     }
 
-    // Loop through each ingredient and accumulate its nutrient values
-    ingredients.forEach(ing => {
+    // Loop over each ingredient and sum up its nutrients
+    ingredients.forEach((ing) => {
       const parsed = ing?.parsed?.[0]?.nutrients || {};
       for (const code of Object.keys(TARGET_NUTRIENTS)) {
         if (parsed[code]) {
@@ -81,22 +76,28 @@ export default function MealAnalyzer() {
   };
 
   /**
-   handleAnalyze
-   Sends the meal to the backend for analysis and updates state with the results.
+   * Handles meal analysis:
+   * Sends input to backend (Edamam)
+   * Fetches analyzed result
+   * Aggregates nutrients for display
    */
   const handleAnalyze = async () => {
     await analyzeMeal(mealInput);
     const latest = await getLatestMeal();
 
+    if (!latest || !Array.isArray(latest.ingredients)) {
+      alert('Something went wrong analyzing the meal. Please try again.');
+      return;
+    }
+
     const totals = aggregateNutrients(latest.ingredients);
     setNutrients(totals);
-    setCompatibilityResult(null); // Reset compatibility check result
-    setTips([]); // Clear existing tips
+    setCompatibilityResult(null);
+    setTips([]);
   };
 
   /**
-   handleCheckCompatibility
-   Checks whether the analyzed meal matches the selected diet label.
+   * Handles diet compatibility check using selected diet label
    */
   const handleCheckCompatibility = () => {
     if (!selectedLabel || !nutrients) return;
@@ -105,8 +106,7 @@ export default function MealAnalyzer() {
   };
 
   /**
-   handleGenerateTips
-   Generates nutrition tips based on the aggregated nutrients.
+   * Generates personalized nutrition tips from current nutrient profile
    */
   const handleGenerateTips = () => {
     if (!nutrients) return;
@@ -117,7 +117,8 @@ export default function MealAnalyzer() {
   return (
     <div>
       <h2>Enter Your Meal</h2>
-      {/* Input field for user to type in ingredients */}
+
+      {/* Textarea for user to input meal/ingredients */}
       <textarea
         value={mealInput}
         onChange={(e) => setMealInput(e.target.value)}
@@ -128,12 +129,14 @@ export default function MealAnalyzer() {
       <br />
       <button onClick={handleAnalyze}>Analyze Meal</button>
 
-      {/* Display nutrition results if available */}
+      {/* Display nutrients and tools if a meal has been analyzed */}
       {nutrients && (
         <div style={{ marginTop: '30px' }}>
+          {/* Nutrition Summary */}
           <h3>Nutrition Summary</h3>
           <p><strong>Calories:</strong> {nutrients.ENERC_KCAL?.toFixed(0) || '0'}</p>
 
+          {/* Table of nutrients */}
           <table border="1" cellPadding="8" style={{ marginTop: '10px', borderCollapse: 'collapse' }}>
             <thead>
               <tr>
@@ -144,48 +147,56 @@ export default function MealAnalyzer() {
               </tr>
             </thead>
             <tbody>
-              {/* Loop through each nutrient and show its aggregated total */}
               {Object.entries(TARGET_NUTRIENTS).map(([code, meta]) => (
                 <tr key={code}>
                   <td>{code}</td>
                   <td>{meta.label}</td>
-                  <td>{nutrients[code]?.toFixed(2) || "0.00"}</td>
+                  <td>{nutrients[code]?.toFixed(2) || '0.00'}</td>
                   <td>{meta.unit}</td>
                 </tr>
               ))}
             </tbody>
           </table>
 
-          {/* Meal Compatibility Section */}
+          {/* Section: Diet Compatibility Checker */}
           <div style={{ marginTop: '30px' }}>
             <h3>Check Meal Compatibility</h3>
+
+            {/* Dropdown for selecting a diet label */}
             <select
               value={selectedLabel}
               onChange={(e) => {
                 setSelectedLabel(e.target.value);
-                setCompatibilityResult(null); // Clear result on new selection
+                setCompatibilityResult(null); // Reset result on change
               }}
             >
               <option value="">Select a diet</option>
-              {DIET_LABELS.map(label => (
+              {DIET_LABELS.map((label) => (
                 <option key={label} value={label}>{label}</option>
               ))}
             </select>
-            <button onClick={handleCheckCompatibility} style={{ marginLeft: '10px' }}>Check</button>
 
+            {/* Button to check compatibility */}
+            <button onClick={handleCheckCompatibility} style={{ marginLeft: '10px' }}>
+              Check
+            </button>
+
+            {/* Display result of compatibility check */}
             {compatibilityResult !== null && (
               <p style={{ marginTop: '10px' }}>
                 This meal is {compatibilityResult ? '✔' : '❌'}{' '}
-                <strong>{compatibilityResult ? 'Compatible' : 'Not Compatible'}</strong>{' '}
-                with <strong>{selectedLabel}</strong> diet.
+                <strong>{compatibilityResult ? 'Compatible' : 'Not Compatible'}</strong> with{' '}
+                <strong>{selectedLabel}</strong> diet.
               </p>
             )}
           </div>
 
-          {/* Nutrition Tips Section */}
+          {/* Section: Nutrition Tips */}
           <div style={{ marginTop: '30px' }}>
             <h3>Nutrition Tips</h3>
             <button onClick={handleGenerateTips}>Get Nutrition Tips</button>
+
+            {/* List of generated tips */}
             <ul>
               {tips.map((tip, idx) => (
                 <li key={idx}>{tip}</li>
