@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
-function WorkoutLogger({ phone, selectedExerciseName }) {
+function WorkoutLogger({ phone, selectedExerciseName, onWorkoutLogged }) {
   const [exerciseName, setExerciseName] = useState('');
   const [sets, setSets] = useState('');
   const [reps, setReps] = useState('');
   const [weight, setWeight] = useState('');
-  const [date, setDate] = useState('');
   const [message, setMessage] = useState('');
 
   const isDisabled = !phone;
@@ -20,7 +19,7 @@ function WorkoutLogger({ phone, selectedExerciseName }) {
     e.preventDefault();
     setMessage('');
 
-    if (!exerciseName || !sets || !reps || !weight || !date) {
+    if (!exerciseName || !sets || !reps || !weight) {
       setMessage('⚠️ Please fill in all fields.');
       return;
     }
@@ -35,7 +34,6 @@ function WorkoutLogger({ phone, selectedExerciseName }) {
           sets: Number(sets),
           reps: Number(reps),
           weight: Number(weight),
-          date
         })
       });
 
@@ -49,7 +47,11 @@ function WorkoutLogger({ phone, selectedExerciseName }) {
         setSets('');
         setReps('');
         setWeight('');
-        setDate('');
+
+        // trigger refresh in WorkoutHistory
+        if (onWorkoutLogged) {
+          onWorkoutLogged();
+        }
       }
     } catch (err) {
       console.error(err);
@@ -105,16 +107,6 @@ function WorkoutLogger({ phone, selectedExerciseName }) {
             type="number"
             value={weight}
             onChange={(e) => setWeight(e.target.value)}
-            disabled={isDisabled}
-          />
-        </label>
-        <br />
-        <label>
-          Date:
-          <input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
             disabled={isDisabled}
           />
         </label>

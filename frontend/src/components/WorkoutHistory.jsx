@@ -1,24 +1,21 @@
 import React, { useState, useEffect } from 'react';
 
-function WorkoutHistory({ phone }) {
+function WorkoutHistory({ phone, refreshTrigger }) {
   const [logs, setLogs] = useState([]);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // Optional: reset logs if phone changes (e.g., new profile loaded)
-  useEffect(() => {
-    setLogs([]);
-    setVisible(false);
-  }, [phone]);
-
   const fetchLogs = async () => {
     if (!phone) return;
-
     setLoading(true);
     try {
       const res = await fetch(`http://localhost:5000/api/workoutLogs/${phone}`);
       const data = await res.json();
-      setLogs(data);
+
+      // Sort logs by timestamp (latest first)
+      const sortedLogs = data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+      setLogs(sortedLogs);
       setVisible(true);
     } catch (err) {
       console.error('Failed to fetch workout logs:', err);
@@ -26,6 +23,34 @@ function WorkoutHistory({ phone }) {
       setLoading(false);
     }
   };
+
+  // Refresh logs when refreshTrigger changes (example after logging a workout)
+useEffect(() => {
+  if (!phone) return;
+
+  setVisible(true);
+
+  const fetchLogs = async () => {
+    try {
+      const res = await fetch(`http://localhost:5000/api/workoutLogs/${phone}`);
+      const data = await res.json();
+      const sortedLogs = data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      setLogs(sortedLogs);
+    } catch (err) {
+      console.error('Failed to fetch workout logs:', err);
+    }
+  };
+
+  fetchLogs();
+}, [refreshTrigger, phone]);
+
+
+
+  // Reset logs when phone changes
+  useEffect(() => {
+    setLogs([]);
+    setVisible(false);
+  }, [phone]);
 
   return (
     <div style={{ marginTop: '2rem' }}>
@@ -39,7 +64,8 @@ function WorkoutHistory({ phone }) {
           <ul>
             {logs.map((log, index) => (
               <li key={index}>
-                <strong>{log.exerciseName}</strong> – {log.sets} sets x {log.reps} reps @ {log.weight} lbs on {log.date}
+                <strong>{log.exerciseName}</strong> – {log.sets} sets × {log.reps} reps @ {log.weight} lbs on{' '}
+                {new Date(log.timestamp).toLocaleString()}
               </li>
             ))}
           </ul>

@@ -2,9 +2,9 @@ const { db } = require('../firebase');
 
 exports.logWorkout = async (req, res) => {
   try {
-    const { phone, exerciseName, sets, reps, weight, date } = req.body;
+    const { phone, exerciseName, sets, reps, weight } = req.body;
 
-    if (!phone || !exerciseName || !sets || !reps || !weight || !date) {
+    if (!phone || !exerciseName || !sets || !reps || !weight) {
       return res.status(400).json({ error: 'All fields are required.' });
     }
 
@@ -14,7 +14,6 @@ exports.logWorkout = async (req, res) => {
       sets,
       reps,
       weight,
-      date,
       timestamp: new Date().toISOString()
     };
 
@@ -32,7 +31,6 @@ exports.getWorkoutLogs = async (req, res) => {
     const phone = req.params.phone;
     const logsSnapshot = await db.collection('workoutLogs')
       .where('phone', '==', phone)
-      //.orderBy('date', 'desc') // optional
       .get();
 
     const logs = logsSnapshot.docs.map(doc => doc.data());

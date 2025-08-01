@@ -7,15 +7,22 @@ import WorkoutHistory from './components/WorkoutHistory';
 
 function App() {
   const [selectedExerciseName, setSelectedExerciseName] = useState('');
-  const [phone, setPhone] = useState(localStorage.getItem('phone') || null); // only use phone
+  const [phone, setPhone] = useState(localStorage.getItem('phone') || null);
+
+  const [refreshKey, setRefreshKey] = useState(0); // new state
 
   useEffect(() => {
-    const storedPhone = localStorage.getItem('phone'); // must match key used in CreateProfile
+    const storedPhone = localStorage.getItem('phone');
     if (storedPhone) setPhone(storedPhone);
   }, []);
 
   const handleProfileCreated = (id) => {
-    setPhone(id); // update phone on profile creation
+    setPhone(id);
+  };
+
+  // Triggered after a new workout is logged
+  const handleWorkoutLogged = () => {
+    setRefreshKey(prev => prev + 1);
   };
 
   return (
@@ -39,11 +46,15 @@ function App() {
         <WorkoutLogger
           selectedExerciseName={selectedExerciseName}
           phone={phone}
+          onWorkoutLogged={handleWorkoutLogged} // passed here
         />
       </section>
 
       <section>
-        <WorkoutHistory phone={phone} />
+        <WorkoutHistory
+          phone={phone}
+          refreshTrigger={refreshKey} // passed here
+        />
       </section>
     </div>
   );
