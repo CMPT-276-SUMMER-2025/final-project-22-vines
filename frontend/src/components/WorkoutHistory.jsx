@@ -1,11 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function WorkoutHistory({ phone }) {
   const [logs, setLogs] = useState([]);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  // Optional: reset logs if phone changes (e.g., new profile loaded)
+  useEffect(() => {
+    setLogs([]);
+    setVisible(false);
+  }, [phone]);
+
   const fetchLogs = async () => {
+    if (!phone) return;
+
     setLoading(true);
     try {
       const res = await fetch(`http://localhost:5000/api/workoutLogs/${phone}`);
@@ -21,7 +29,7 @@ function WorkoutHistory({ phone }) {
 
   return (
     <div style={{ marginTop: '2rem' }}>
-      <button onClick={fetchLogs} disabled={loading}>
+      <button onClick={fetchLogs} disabled={!phone || loading}>
         {loading ? 'Loading...' : 'Show Workout Logs'}
       </button>
 
@@ -31,7 +39,7 @@ function WorkoutHistory({ phone }) {
           <ul>
             {logs.map((log, index) => (
               <li key={index}>
-                <strong>{log.exerciseName}</strong> - {log.sets} sets x {log.reps} reps @ {log.weight} lbs on {log.date}
+                <strong>{log.exerciseName}</strong> – {log.sets} sets x {log.reps} reps @ {log.weight} lbs on {log.date}
               </li>
             ))}
           </ul>
