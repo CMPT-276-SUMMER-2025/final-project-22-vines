@@ -1,0 +1,269 @@
+.analyzeMeal {
+  padding: 2rem 5%;
+  background-color: #f8f9fa;
+  height: 90vh;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+}
+
+.rightSpacer {
+  width: 100%;
+  max-width: 400px;
+  margin-left: 10px;
+}
+
+.foodEntryContainer {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 400px;
+  max-height: 83vh;
+  margin-right: 10px;
+}
+
+.foodEntryContainer h2 {
+  margin-bottom: 1rem;
+}
+
+/* ───── Toolbar ───── */
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.left-actions,
+.right-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.toolbar button {
+  padding: 0.5rem 0.75rem;
+  min-width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background-color: #e4e4e4;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-size: 0.875rem;
+}
+
+.toolbar button:hover {
+  background-color: #d4d4d4;
+}
+
+.toolbar button img {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  margin-right: 0.4rem;
+}
+
+/* ───── Food Entry Form ───── */
+.foodEntries {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.foodEntry {
+  display: flex;
+  align-items: center;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.5rem;
+  position: relative;
+  transition: background-color 0.2s ease;
+}
+
+.foodEntry:hover {
+  background-color: #ececec;
+}
+
+.foodEntry input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  outline: none;
+}
+
+/* ───── Remove Button ───── */
+.removeBtn {
+  opacity: 0;
+  pointer-events: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.foodEntry:hover .removeBtn {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.removeBtn img {
+  width: 16px;
+  height: 16px;
+  filter: grayscale(100%) brightness(0.4);
+}
+
+/* ───── Analysis Results ───── */
+.analysisResultsContainer {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  max-width: 600px;
+  width: 100%;
+  height: auto;
+  max-height: 83vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+
+.tabSwitcher {
+  display: flex;
+  align-items: center;
+  margin: 1rem 0;
+  gap: 0.5rem;
+}
+
+.tabSwitcher button {
+  background: transparent;
+  border: none;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  min-width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e4e4e4;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-size: 0.875rem;
+}
+
+.tabSwitcher button.active {
+  background-color: #FF6565;
+  color: white;
+}
+
+.tabSwitcher button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.tabContent {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.analysisPlaceholder {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80%;
+  text-align: center;
+  color: #888;
+  font-size: 1rem;
+}
+
+/* ───── Nutrition Label ───── */
+.nutritionLabel {
+  width: 100%;
+  padding-right: 1rem;
+  font-family: Arial, sans-serif;
+  background: white;
+  color: black;
+}
+
+.nutritionLabel h3 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  border-bottom: 10px solid black;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.nutritionLabel .caloriesLine {
+  font-size: 1.25rem;
+  font-weight: bold;
+  border-bottom: 4px solid black;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.3rem;
+}
+
+.nutritionLabel table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.nutritionLabel th, .nutritionLabel td {
+  font-size: 0.9rem;
+  padding: 4px 0;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.nutritionLabel th {
+  font-weight: bold;
+}
+
+.nutritionLabel tbody tr:first-child td {
+  border-top: none;
+}
+
+.nutritionLabel td.bold {
+  font-weight: 700;
+  padding-top: 0.75rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 2px solid black;
+}
+
+.nutritionLabel td.quantity {
+  text-align: right;
+}
+
+
+.nutritionLabel .heavy-line {
+  border-top: 4px solid black;
+  margin: 0.5rem 0;
+}
+
+/* ───── Compatibility Select Menu ───── */
+.dietSelect {
+  appearance: none;
+  font-size: 14px;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  background-color: white;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.dietSelect:hover {
+  background-color: #d4d4d4;
+}
+
+.dietSelect:focus {
+  outline: none;
+  border-color: #ccc;
+}
