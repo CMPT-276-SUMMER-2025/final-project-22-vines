@@ -1,16 +1,16 @@
-
 const admin = require('firebase-admin');
 
-// Load service account credentials from the path specified in the environment variable
-const serviceAccount = require(process.env.GOOGLE_APPLICATION_CREDENTIALS);
+// Load Firebase service account credentials
+// this file exists and is NOT committed to version control and is added to .gitignore
+const serviceAccount = require('./serviceAccountKey.json');
 
 // Initialize Firebase Admin SDK with service account credentials
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 
-// Create a Firestore database instance
+// Initialize Firestore database instance
 const db = admin.firestore();
 
-// Export the Firestore instance for use in other parts of the app
-module.exports = db;
+// Export Firestore instance for use in other parts of the app
+module.exports = { db };

@@ -11,32 +11,47 @@ Features Implemented
 - Aggregate nutritional info for user-entered ingredients
 - Check meal compatibility against selected dietary labels
 - Generate nutrition tips based on the meal content
-- Backend integration with Firebase Firestore for storing the latest analyzed meal
+- Log and view workout history using Firebase Firestore
+- Search exercises using Wger API
+- Generate beginner-friendly weekly workout plan by fitness goal
+- Create and store user profiles locally
 
 Project Structure
 ------------------
 root/
 ├── backend/
 │   ├── controllers/
-│   │   └── mealController.js
+│   │   ├── mealController.js
+│   │   ├── workoutLogController.js
+│   │   └── weeklyPlanController.js
 │   ├── routes/
-│   │   └── edamamRoutes.js
+│   │   ├── edamamRoutes.js
+│   │   ├── workoutLogRoutes.js
+│   │   └── weeklyPlanRoutes.js
 │   ├── firebase.js
 │   ├── server.js
 │   └── .env
 ├── frontend/
 │   ├── src/
 │   │   ├── components/
-│   │   │   └── MealAnalyzer.jsx
+│   │   │   ├── MealAnalyzer.jsx
+│   │   │   ├── ExerciseSearch.jsx
+│   │   │   ├── WorkoutLogger.jsx
+│   │   │   ├── WorkoutHistory.jsx
+│   │   │   ├── WeeklyPlanGenerator.jsx
+│   │   │   ├── GoalSelector.jsx
+│   │   │   └── CreateProfile.jsx
 │   │   ├── utils/
 │   │   │   ├── dietLabels.js
-│   │   │   └── nutritionTips.jsx
+│   │   │   ├── nutritionTips.jsx
+│   │   │   └── goals.js
 │   │   ├── api/
-│   │   │   └── mealAPI.js
+│   │   │   ├── mealAPI.js
+│   │   │   └── exerciseAPI.js
 │   │   ├── App.js
 │   │   └── index.js
 │   └── package.json
-└── README.md (Ignore this one)
+└── README.md
 
 How to Run Locally
 ------------------
@@ -60,6 +75,8 @@ How to Run Locally
     GOOGLE_APPLICATION_CREDENTIALS=./serviceAccountKey.json (Get this from firebase database)
     PORT=5000
 
+    Place your Firebase service account JSON as `serviceAccountKey.json`
+    
     Start the backend server:
 
     node server.js
@@ -82,15 +99,6 @@ Notes
 -----
 - Ensure that your frontend points to the correct backend URL in mealAPI.js. For local testing:
     const BASE_URL = 'http://localhost:5000/api/edamam';
-
-Testing
--------
-1. Enter a meal like: 2 eggs, 1 toast, 1 banana
-2. Click "Analyze Meal"
-3. View:
-   - Nutrient summary table
-   - Compatibility check with diet labels
-   - Auto-generated nutrition improvement tips
 
 Contact
 --------

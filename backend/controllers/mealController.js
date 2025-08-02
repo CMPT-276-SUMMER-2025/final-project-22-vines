@@ -1,23 +1,21 @@
 const axios = require('axios');
-const db = require('../firebase');
+const { db } = require('../firebase');
 
 /**
-analyzeMealController
-Analyzes a meal using the Edamam Nutrition Analysis API.
- 
-  INPUT:
- req.body.title (string): The title of the meal
- req.body.ingr (string[]): Array of ingredients
- 
- OUTPUT:
-JSON response with full nutrition analysis result from Edamam
-Saves the result to Firestore under the 'latestMeal' document
+ * Controller: analyzeMealController
+ * Sends the user's meal data to the Edamam Nutrition API for analysis,
+ * then saves the response in Firestore under 'mealLogs/latestMeal'.
+ @param {Object} req - Express request object
+ @param {string} req.body.title - Title of the meal
+ @param {string[]} req.body.ingr - List of ingredient strings
+ @param {Object} res - Express response object
+ @returns {Object} JSON object with nutritional data from Edamam
  */
 const analyzeMealController = async (req, res) => {
   try {
     const { title, ingr } = req.body;
 
-    // Send a POST request to Edamam Nutrition Analysis API with meal title and ingredients
+    // Call Edamam Nutrition API with meal title and ingredients
     const edamamResponse = await axios.post(
       `https://api.edamam.com/api/nutrition-details?app_id=${process.env.EDAMAM_APP_ID}&app_key=${process.env.EDAMAM_API_KEY}`,
       { title, ingr }
@@ -25,45 +23,37 @@ const analyzeMealController = async (req, res) => {
 
     const result = edamamResponse.data;
 
-    // Save the API response to Firestore with a timestamp
+    // Save response to Firestore under 'mealLogs/latestMeal'
     const docRef = db.collection('mealLogs').doc('latestMeal');
     await docRef.set({ ...result, timestamp: new Date().toISOString() });
 
-    // Return the analysis result to the client
     res.json(result);
   } catch (error) {
-    console.error(error);
-    // Handle and return a server error response if the request or save fails
+    console.error('Error analyzing meal:', error.message);
     res.status(500).json({ error: 'Failed to analyze and save meal.' });
   }
 };
 
 /**
- getLatestMealController
- Retrieves the most recently analyzed meal from Firestore.
- INPUT:
-  None (uses the 'latestMeal' doc in Firestore)
- OUTPUT:
-  JSON object containing the latest meal analysis data
+Controller: getLatestMealController: Fetches the most recent meal log saved in Firestore.
+ @param {Object} req - Express request object
+ @param {Object} res - Express response object
+ @returns {Object} JSON object of the latest meal log
  */
 const getLatestMealController = async (req, res) => {
   try {
     const docRef = db.collection('mealLogs').doc('latestMeal');
     const doc = await docRef.get();
 
-    // If the document doesn't exist, return a 404 error
     if (!doc.exists) {
       return res.status(404).json({ error: 'No meal log found.' });
     }
 
-    // Return the latest meal log data
     res.json(doc.data());
   } catch (error) {
-    console.error(error);
-    // Handle and return a server error response if fetching fails
+    console.error('Error fetching latest meal:', error.message);
     res.status(500).json({ error: 'Failed to fetch meal.' });
   }
 };
 
-// Export controller functions for use in routes
 module.exports = { analyzeMealController, getLatestMealController };

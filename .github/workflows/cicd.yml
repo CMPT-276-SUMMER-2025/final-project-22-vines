@@ -21,16 +21,20 @@ jobs:
           node-version: 22.16.0
           
       - name: Install backend dependencies
-        run: npm ci
-        working-directory: ./backend
+        run: |
+          cd ./backend
+          npm install
+
 
       - name: Run backend tests
         run: npm test
         working-directory: ./backend
 
       - name: Install Frontend dependencies
-        run: npm ci
-        working-directory: ./frontend
+        run: |
+          cd ./frontend
+          npm install
+        
         
       - name: Build React app
         run: npm run build
