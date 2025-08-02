@@ -1,0 +1,119 @@
+.searchExercises {
+  padding: 2rem 5%;
+  background-color: #f8f9fa;
+  height: 90vh;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+}
+
+.rightSpacer {
+  width: 100%;
+  max-width: 400px;
+  margin-left: 10px;
+}
+
+.searchForm {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 400px;
+  max-height: 83vh;
+  margin-right: 10px;
+}
+
+.searchForm h2 {
+  margin-bottom: 1rem;
+}
+
+/* ───── Toolbar ───── */
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.left-actions,
+.right-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.toolbar button {
+  padding: 0.5rem 0.75rem;
+  min-width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background-color: #e4e4e4;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-size: 0.875rem;
+}
+
+.toolbar button:hover {
+  background-color: #d4d4d4;
+}
+
+.toolbar button img {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  margin-right: 0.4rem;
+}
+
+/* ───── Search Form ───── */
+.searchResults {
+  max-height: 60vh;
+  /* height: 50%; */
+  overflow-y: auto;
+}
+
+.exerciseEntry {
+  display: flex;
+  align-items: center;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.5rem;
+  position: relative;
+  transition: background-color 0.2s ease;
+}
+
+.exerciseEntry:hover {
+  background-color: #ececec;
+}
+
+/* ───── Exercise Information ───── */
+.exerciseInformation {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  max-width: 600px;
+  width: 100%;
+  height: auto;
+  max-height: 83vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.informationPlaceholder {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80%;
+  text-align: center;
+  color: #888;
+  font-size: 1rem;
+}
