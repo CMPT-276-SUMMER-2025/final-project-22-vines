@@ -74,46 +74,43 @@ const WeeklyPlanGenerator = () => {
   };
 
   return (
-    <div>
-      {/* Goal selector dropdown */}
-      <GoalSelector
-        selectedGoal={selectedGoal}
-        setSelectedGoal={(goal) => {
-          setSelectedGoal(goal);
-          setLoading(true); // Show spinner immediately
-        }}
-      />
+    <div className="generatePlan">
+      <div className="goalSelector">
+        <h2>Select Your Plan</h2>
+        {/* Goal selector dropdown */}
+        <GoalSelector
+          selectedGoal={selectedGoal}
+          setSelectedGoal={(goal) => {
+            setSelectedGoal(goal);
+            setLoading(true); // Show spinner immediately
+          }}
+        />
+      </div>
+      
+      <div className="workoutPlanContainer">
+        <h2>Workout Plan</h2>
+        {loading ? (
+          <p style={{ fontStyle: 'italic', padding: '1rem' }}>
+            Generating your 7-Day Training Plan...
+          </p>
+        ) : (
+          <>
+            {/* Show print button only when plan is generated */}
+            {weeklyPlan.length > 0 && (
+              <button className="printButton" onClick={handlePrint}>
+                🖨️ Print This Plan
+              </button>
+            )}
 
-      {loading ? (
-        <p style={{ fontStyle: 'italic', padding: '1rem' }}>
-          Generating your 7-Day Training Plan...
-        </p>
-      ) : (
-        <>
-          {/* Show print button only when plan is generated */}
-          {weeklyPlan.length > 0 && (
-            <button
-              onClick={handlePrint}
-              style={{
-                margin: '1rem 0',
-                padding: '10px 20px',
-                backgroundColor: '#4CAF50',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-              }}
-            >
-              🖨️ Print This Plan
-            </button>
-          )}
-
-          {/* Display the plan */}
-          <div id="printable">
-            <PlanDisplay weeklyPlan={weeklyPlan} />
-          </div>
-        </>
-      )}
+            {/* Display the plan */}
+            <div id="printable" className="workoutPlan">
+              <PlanDisplay weeklyPlan={weeklyPlan} />
+            </div>
+          </>
+        )}
+      </div>
+      
+      <div className="rightSpacer"/>
     </div>
   );
 };
