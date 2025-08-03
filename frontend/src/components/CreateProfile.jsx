@@ -52,11 +52,10 @@ function CreateProfile({ onProfileCreated }) {
   };
 
   return (
-    <div style={{ marginBottom: '2rem' }}>
-      <h3>Create or Load Profile</h3>
+    <div className="createProfile">
       <form onSubmit={handleSubmit}>
         <label>
-          Phone Number:{' '}
+          Phone Number
           <input
             type="tel"
             required
@@ -67,16 +66,18 @@ function CreateProfile({ onProfileCreated }) {
             placeholder="Enter phone number"
           />
         </label>
-        <br />
-        <button type="submit">Continue</button>
+
+        {/* Message display after submission */}
+        {message && (
+          <p style={{ color: message.startsWith('✅') ? 'green' : 'crimson' }}>
+            {message}
+          </p>
+        )}
+
+        <button type="submit">Load</button>
       </form>
 
-      {/* Message display after submission */}
-      {message && (
-        <p style={{ color: message.startsWith('✅') ? 'green' : 'crimson' }}>
-          {message}
-        </p>
-      )}
+      
     </div>
   );
 }
