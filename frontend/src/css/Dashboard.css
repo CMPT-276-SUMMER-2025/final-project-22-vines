@@ -12,6 +12,8 @@
 }
 
 .loggedMeals {
+  display: flex;
+  flex-direction: column;
   background: #fff;
   border-radius: 12px;
   padding: 1.5rem;
@@ -19,6 +21,12 @@
   max-width: 400px;
   max-height: 83vh;
   margin-right: 10px;
+}
+
+.loggedMealsContent {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 1rem;
 }
 
 .nutritionInfo {
@@ -35,7 +43,11 @@
   overflow-y: auto;
 }
 
+
+
 .trackedExercises {
+  display: flex;
+  flex-direction: column;
   background: #fff;
   border-radius: 12px;
   padding: 1.5rem;
@@ -45,6 +57,51 @@
   margin-left: 10px;
 }
 
+.trackedExercisesContent {
+  flex: 1;
+  overflow-y: auto;
+}
+
 .nutritionInfoContent {
+  flex: 1;
+  overflow-y: auto;
   padding-right: 1rem;
+}
+
+.trackedExercisesContent {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 0;
+}
+
+.noProfilePrompt {
+  text-align: center;
+  max-width: 300px;
+}
+
+.phoneInputRow {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.phoneInputRow input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  width: 160px;
+}
+
+.phoneInputRow button {
+  padding: 0.5rem 1rem;
+  background-color: #e4e4e4;
+  color: black;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
 }

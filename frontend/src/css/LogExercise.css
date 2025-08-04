@@ -74,10 +74,13 @@
   overflow-y: auto;
 }
 
+.exerciseHistoryContainer h2 {
+  margin-bottom: 1rem;
+}
+
 .exerciseHistory {
   flex: 1;
   overflow-y: auto;
-  margin-top: 0.75rem;
   padding-right: 1rem;
 }
 

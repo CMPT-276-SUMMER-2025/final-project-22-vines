@@ -1,46 +1,54 @@
 import NavBar from '../components/NavBar'
+import { useState } from 'react';
 import { useFoodLog } from '../contexts/FoodLogContext';
 import { useTrackedGoals } from '../contexts/TrackedGoalsContext';
+import { useUser } from '../contexts/UserContext';
+import WorkoutHistory from '../components/WorkoutHistory';
 import "../css/Dashboard.css";
 
 function Dashboard() {
     const { foodLog, loggedNutrients } = useFoodLog();
     const { trackedNutrients, goals, TARGET_NUTRIENTS } = useTrackedGoals();
+    const { phone, setPhone } = useUser();
+    const [manualPhoneInput, setManualPhoneInput] = useState('');
+
     return (
         <>
             <NavBar/>
             <div className="dashboard">
                 <div className="loggedMeals">
                     <h2>Meal History</h2>
-                    {foodLog.length === 0 ? (
-                    <p className="placeholder">No meals logged yet.</p>
-                    ) : (
-                    <ul>
-                          {foodLog.slice().reverse().map((entry, index) => {
-                            const time = new Date(entry.timestamp).toLocaleTimeString([], {
-                              hour: 'numeric',
-                              minute: '2-digit',
-                            });
+                    <div className="loggedMealsContent">
+                      {foodLog.length === 0 ? (
+                      <p className="placeholder">No meals logged yet.</p>
+                      ) : (
+                      <ul>
+                            {foodLog.slice().reverse().map((entry, index) => {
+                              const time = new Date(entry.timestamp).toLocaleTimeString([], {
+                                hour: 'numeric',
+                                minute: '2-digit',
+                              });
 
-                            return (
-                              <div key={entry.timestamp} className="meal-entry">
-                                <div className="meal-header">
-                                  <span className="meal-time">{time}</span>
-                                  {/* <button className="delete-meal" onClick={() => removeMeal(entry.timestamp)}>×</button> */}
+                              return (
+                                <div key={entry.timestamp} className="meal-entry">
+                                  <div className="meal-header">
+                                    <span className="meal-time">{time}</span>
+                                    {/* <button className="delete-meal" onClick={() => removeMeal(entry.timestamp)}>×</button> */}
+                                  </div>
+                                  <div className="meal-body">
+                                    <ul>
+                                      {entry.items.map((item, i) => (
+                                        <li key={i}>• {item}</li>
+                                      ))}
+                                    </ul>
+                                  </div>
                                 </div>
-                                <div className="meal-body">
-                                  <ul>
-                                    {entry.items.map((item, i) => (
-                                      <li key={i}>• {item}</li>
-                                    ))}
-                                  </ul>
-                                </div>
-                              </div>
-                            );
-                          })}
+                              );
+                            })}
 
-                        </ul>
-                    )}
+                          </ul>
+                      )}
+                    </div>
                 </div>
                 <div className="nutritionInfo">
                     <h2>Nutrition Summary</h2>
@@ -78,9 +86,29 @@ function Dashboard() {
                     </div>
                 </div>
                 <div className="trackedExercises">
-                    <h2>Exercise History</h2>
-                    <p>Work in progress.</p>
+                  <h2>Exercise History</h2>
+                  <div className="trackedExercisesContent">
+                    {!phone ? (
+                      <div className="noProfilePrompt">
+                        <p>No profile loaded.<br/> <br/>Enter your phone number to view your workouts:</p>
+                        <div className="phoneInputRow">
+                          <input
+                            type="text"
+                            placeholder="Enter phone number"
+                            value={manualPhoneInput}
+                            onChange={(e) => setManualPhoneInput(e.target.value)}
+                          />
+                          <button onClick={() => setPhone(manualPhoneInput)}>
+                            Load Profile
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <WorkoutHistory phone={phone} />
+                    )}
+                  </div>
                 </div>
+
             </div>
         </> 
     )

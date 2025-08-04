@@ -16,6 +16,8 @@ export default function FoodLogger() {
   const { trackedNutrients, goals, TARGET_NUTRIENTS } = useTrackedGoals();
   const [activeTab, setActiveTab] = useState('summary');
   const [nutrients, setNutrients] = useState(null);
+  const [loading, setLoading] = useState(false);
+
   
   // Food entry box
   const [tempValues, setTempValues] = useState(['']);
@@ -135,21 +137,37 @@ export default function FoodLogger() {
    Sends the meal to the backend for analysis and updates state with the results.
    */
   const handleAnalyze = async () => {
+    if (loading) return; // Prevent multiple rapid clicks
+
     const combinedInput = formFields.map(f => f.food.trim()).filter(Boolean).join(', ');
     if (!combinedInput) return alert("Please enter some foods.");
 
-    await analyzeMeal(combinedInput);
-    const latest = await getLatestMeal();
+    try {
+      setLoading(true);
 
-    const totals = aggregateNutrients(latest.ingredients);
-    setNutrients(totals);
+      await analyzeMeal(combinedInput);
+      const latest = await getLatestMeal();
+      const totals = aggregateNutrients(latest.ingredients);
+      setNutrients(totals);
 
-    addMeal({
-      timestamp: new Date().toISOString(),
-      items: formFields.map(f => f.food.trim()).filter(Boolean),
-      nutrients: totals
-    });
+      addMeal({
+        timestamp: new Date().toISOString(),
+        items: formFields.map(f => f.food.trim()).filter(Boolean),
+        nutrients: totals
+      });
+
+      // Clear input after successful log
+      setFormFieldsRaw([{ food: '' }], true);
+      setTempValues(['']);
+
+    } catch (error) {
+      console.error("Error analyzing meal:", error);
+      alert("Failed to analyze meal. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
+
 
   return (
     <div className="logFood">
@@ -159,7 +177,9 @@ export default function FoodLogger() {
         <div className='foodEntryBox'>
             <div className="toolbar">
                 <div className="left-actions">
-                <button onClick={submit}><img src={enterIcon} alt="Submit" /> Submit</button>
+                <button onClick={submit} disabled={loading}>
+                  {loading ? 'Submitting...' : <><img src={enterIcon} alt="Submit" /> Submit</>}
+                </button>
                 <button onClick={addFields}><img src={addIcon} alt="Add" /></button>
                 <button onClick={undo}><img src={undoIcon} alt="Undo" /></button>
                 <button onClick={redo}><img src={redoIcon} alt="Redo" /></button>

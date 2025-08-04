@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useUser } from '../contexts/UserContext';
 
 /**
  * CreateProfile Component
@@ -9,8 +10,9 @@ import React, { useState } from 'react';
  * @param {Function} onProfileCreated - Callback function after successful profile creation
  */
 function CreateProfile({ onProfileCreated }) {
-  const [phone, setPhone] = useState('');
+  const [phone, setPhoneInput] = useState('');
   const [message, setMessage] = useState('');
+  const {setPhone} = useUser();
 
   /**
    * Handles form submission:
@@ -40,6 +42,8 @@ function CreateProfile({ onProfileCreated }) {
       localStorage.setItem('phone', data.id);
       setMessage(`✅ Profile loaded: ${data.id}`);
 
+      setPhone(data.id);
+
       // Call parent callback
       if (onProfileCreated) {
         onProfileCreated(data.id);
@@ -60,9 +64,7 @@ function CreateProfile({ onProfileCreated }) {
             type="tel"
             required
             value={phone}
-            onChange={(e) =>
-              setPhone(e.target.value.replace(/\D/g, '')) // Remove non-digits
-            }
+            onChange={(e) => setPhoneInput(e.target.value.replace(/\D/g, ''))} // Remove non-digits
             placeholder="Enter phone number"
           />
         </label>
