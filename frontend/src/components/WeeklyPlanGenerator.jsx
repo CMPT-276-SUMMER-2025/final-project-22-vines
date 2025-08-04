@@ -70,7 +70,32 @@ const WeeklyPlanGenerator = () => {
    * Opens browser print dialog to print the workout plan
    */
   const handlePrint = () => {
-    window.print();
+    const printContents = document.getElementById('printable')?.innerHTML;
+    if (!printContents) return;
+
+    const printWindow = window.open('', '', 'height=600,width=800');
+    if (!printWindow) return;
+
+    const doc = printWindow.document;
+
+    const html = doc.createElement('html');
+    const head = doc.createElement('head');
+    const title = doc.createElement('title');
+    title.innerText = 'Workout Plan';
+    head.appendChild(title);
+
+    const body = doc.createElement('body');
+    body.innerHTML = printContents;
+
+    html.appendChild(head);
+    html.appendChild(body);
+
+    doc.documentElement.replaceWith(html);
+
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+    printWindow.close();
   };
 
   return (
