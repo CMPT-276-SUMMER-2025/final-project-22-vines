@@ -3,6 +3,7 @@ import axios from 'axios';
 import GoalSelector from './GoalSelector';
 import PlanDisplay from './PlanDisplay';
 import { matchExercisesToGoal } from '../utils/goals';
+import printIcon from "../assets/buttons/print.svg";
 
 /**
  * WeeklyPlanGenerator Component:
@@ -114,16 +115,21 @@ const WeeklyPlanGenerator = () => {
       
       <div className="workoutPlanContainer">
         <h2>Workout Plan</h2>
-        {loading ? (
-          <p style={{ fontStyle: 'italic', padding: '1rem' }}>
-            Generating your 7-Day Training Plan...
+        {!selectedGoal ? (
+          <p className="planPlaceholder">
+            Select a goal to generate a plan for the week.
+          </p>
+        ) : loading ? (
+          <p className="planPlaceholder">
+            Generating your training plan for the week...
           </p>
         ) : (
           <>
             {/* Show print button only when plan is generated */}
             {weeklyPlan.length > 0 && (
               <button className="printButton" onClick={handlePrint}>
-                🖨️ Print This Plan
+                <img src={printIcon} alt="Button Icon" className="buttonIcon"/>
+                Print This Plan
               </button>
             )}
 

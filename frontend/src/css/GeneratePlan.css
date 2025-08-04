@@ -28,21 +28,6 @@
   margin-bottom: 1rem;
 }
 
-/* .goalSelector button {
-  margin-top: 0.5rem;
-  padding: 0.5rem 0.75rem;
-  min-width: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  background-color: #e4e4e4;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  font-size: 0.875rem;
-} */
-
 .goal-button-group {
   display: flex;
   flex-direction: column;
@@ -53,16 +38,16 @@
 
 .goal-button {
   padding: 0.5rem 1rem;
-  border: 2px solid #ccc;
+  border: transparent;
   border-radius: 6px;
-  background: white;
+  background-color: #f0f0f0;
   cursor: pointer;
   font-weight: 500;
   transition: all 0.2s ease;
 }
 
 .goal-button:hover {
-  background-color: #f0f0f0;
+  background-color: #ccc;
 }
 
 .goal-button.active {
@@ -108,4 +93,27 @@
   cursor: pointer;
   transition: background-color 0.2s ease;
   font-size: 0.875rem;
+}
+
+.printButton:hover {
+  background-color: #d4d4d4;
+}
+
+.printButton img {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  margin-right: 0.4rem;
+}
+
+/* Placeholder text */
+.planPlaceholder {
+    flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80%;
+  text-align: center;
+  color: #888;
+  font-size: 1rem;
 }
