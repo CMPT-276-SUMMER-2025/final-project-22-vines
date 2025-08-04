@@ -3,8 +3,6 @@
     height: 10vh;
     display: flex;
     align-items: center;
-    /* justify-content: space-between; */
-    /* background: #d1d1d1; */
     padding: 15px 5%;
 }
 
@@ -40,20 +38,12 @@
     background-color: #CCCCCC;
 }
 
-.navbar button:active {
-    background-color: #FF6565;
-    color: white;
-}
-
-.navbar button:active img {
-    filter: invert(100%);
-}
-
 .buttonIcon {
     height: 1em;
     margin-right: 0.5em;
 }
 
+/* HealthMate banner */
 .logo {
     width: 64px;
     margin-right: 0.5em;
@@ -70,6 +60,7 @@
   align-items: flex-start;
 }
 
+/* Default button for dropdown button */
 .dropdownButton {
   display: flex;
   align-items: center;
@@ -87,6 +78,7 @@
   display: block;
 }
 
+/* Dropdown container */
 .dropdownContent {
   display: none;
   position: absolute;
@@ -94,7 +86,6 @@
   left: 0;
   background-color: rgb(243, 243, 243);
   min-width: 200px;
-  /* box-shadow: 0 4px 8px rgba(0,0,0,0.15); */
   border-radius: 12px;
   z-index: 1000;
   padding: 0.5rem;
@@ -104,8 +95,8 @@
   display: block;
 }
 
+/* Default button inside dropdown */
 .dropdownContent .buttonLink button {
-  /* width: 100%; */
   width: 13rem;
   border-radius: 8px;
   justify-content: flex-start;
@@ -116,11 +107,18 @@
   margin-bottom: 0.25rem;
 }
 
+/* Prevent hover override for active links inside dropdown */
+.dropdownContent .buttonLink.active button:hover {
+  background-color: #FF6565;
+  color: white;
+}
+
+/* Hovering over button inside dropdown */
 .dropdownContent .buttonLink button:hover {
   background-color: #CCCCCC;
 }
 
-
+/* Active tab button */
 .activeDropdown > .dropdownButton {
   background-color: #FF6565;
   color: white;
@@ -130,6 +128,7 @@
   filter: invert(100%);
 }
 
+/* Active button inside dropdown */
 .buttonLink.active button {
     background-color: #FF6565;
     color: white;

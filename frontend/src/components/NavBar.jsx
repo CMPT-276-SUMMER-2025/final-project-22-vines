@@ -3,9 +3,11 @@ import {useLocation, NavLink} from "react-router-dom";
 import logo from "../assets/logo.png";
 import name from "../assets/name.png";
 import dashboard from "../assets/dashboard.svg";
-import logfood from "../assets/logfood.svg";
-import analyzemeal from "../assets/analyzemeal.svg";
-import trackexercise from "../assets/trackexercise.svg";
+import nutrition from "../assets/nutrition.svg";
+import exercise from "../assets/exercise.svg";
+import log from "../assets/log.svg";
+import search from "../assets/search.svg";
+import generateplan from "../assets/generateplan.svg";
 import settings from "../assets/settings.svg";
 import "../css/Navbar.css";
 
@@ -47,15 +49,15 @@ function NavBar() {
       <div className="navbarLinks">
         <NavBarButton destination={""} buttonIcon={dashboard} buttonText={"Dashboard"} />
 
-        <Dropdown icon={logfood} label="Nutrition" routes={["logfood", "analyzemeal"]}>
-        <NavBarButton destination={"logfood"} buttonIcon={logfood} buttonText={"Log Food"} />
-        <NavBarButton destination={"analyzemeal"} buttonIcon={analyzemeal} buttonText={"Analyze Meal"} />
+        <Dropdown icon={nutrition} label="Nutrition" routes={["logfood", "analyzemeal"]}>
+        <NavBarButton destination={"logfood"} buttonIcon={log} buttonText={"Log Food"} />
+        <NavBarButton destination={"analyzemeal"} buttonIcon={search} buttonText={"Analyze Meal"} />
         </Dropdown>
 
-        <Dropdown icon={trackexercise} label="Exercise" routes={["logexercise", "searchexercises", "generateplan"]}>
-        <NavBarButton destination={"logexercise"} buttonIcon={trackexercise} buttonText={"Log Exercise"} />
-        <NavBarButton destination={"searchexercises"} buttonIcon={trackexercise} buttonText={"Search Exercises"} />
-        <NavBarButton destination={"generateplan"} buttonIcon={trackexercise} buttonText={"Generate Routine"} />
+        <Dropdown icon={exercise} label="Exercise" routes={["logexercise", "searchexercises", "generateplan"]}>
+        <NavBarButton destination={"logexercise"} buttonIcon={log} buttonText={"Log Exercise"} />
+        <NavBarButton destination={"searchexercises"} buttonIcon={search} buttonText={"Search Exercises"} />
+        <NavBarButton destination={"generateplan"} buttonIcon={generateplan} buttonText={"Generate Routine"} />
         </Dropdown>
       </div>
 
