@@ -1,21 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import CreateProfile from './CreateProfile';
 import WorkoutLogger from './WorkoutLogger';
 import WorkoutHistory from './WorkoutHistory';
+import { useUser } from '../contexts/UserContext'; // ← Add this
 import "../css/LogExercise.css";
 
 export default function ExerciseLogger() {
   const [selectedExerciseName, ] = useState('');
-  const [phone, setPhone] = useState(localStorage.getItem('phone') || null);
+  const { phone, setPhone } = useUser();
   const [refreshKey, setRefreshKey] = useState(0); // Used to trigger refresh in WorkoutHistory
-
-  /**
-   * On initial mount, retrieve saved phone from localStorage (if available)
-   */
-  useEffect(() => {
-    const storedPhone = localStorage.getItem('phone');
-    if (storedPhone) setPhone(storedPhone);
-  }, []);
 
   /**
    * Callback when user profile is created or loaded

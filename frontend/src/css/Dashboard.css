@@ -43,8 +43,6 @@
   overflow-y: auto;
 }
 
-
-
 .trackedExercises {
   display: flex;
   flex-direction: column;
@@ -57,10 +55,10 @@
   margin-left: 10px;
 }
 
-.trackedExercisesContent {
+/* .trackedExercisesContent {
   flex: 1;
   overflow-y: auto;
-}
+} */
 
 .nutritionInfoContent {
   flex: 1;
@@ -72,11 +70,16 @@
   flex: 1;
   overflow-y: auto;
   padding-right: 1rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   min-height: 0;
+  display: block; /* ✅ let list grow */
 }
+
+.exerciseHistory ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
 
 .noProfilePrompt {
   text-align: center;
