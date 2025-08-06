@@ -1,4 +1,4 @@
-import {useState, useEffect, useRef} from 'react';
+import {useState, useEffect, useRef, useCallback} from 'react';
 
 const useUndoRedo = (initialValue, limit = 10) => {
     const [history, setHistory] = useState([initialValue]);
@@ -21,13 +21,14 @@ const useUndoRedo = (initialValue, limit = 10) => {
         }
     };
 
-    const undo = () => {
+    const undo = useCallback(() => {
         setCurrentIndex((i) => Math.max(i - 1, 0));
-    };
+    }, []);
 
-    const redo = () => {
+    const redo = useCallback(() => {
         setCurrentIndex((i) => Math.min(i + 1, history.length - 1));
-    };
+    }, [history.length]);
+
 
     useEffect(() => {
         const handleKeyDown = (event) => {
@@ -45,7 +46,8 @@ const useUndoRedo = (initialValue, limit = 10) => {
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
-    }, []);
+    }, [undo, redo]);
+
 
     return [history[currentIndex], set, undo, redo, inputRef];
 };
