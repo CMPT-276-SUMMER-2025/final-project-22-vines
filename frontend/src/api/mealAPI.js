@@ -1,5 +1,5 @@
 // Base URL for Edamam-related API calls
-const BASE_URL = 'http://localhost:5000/api/edamam';
+const BASE_URL = `${process.env.REACT_APP_API_BASE_URL}/api/edamam`;
 
 /**
  * @function analyzeMeal

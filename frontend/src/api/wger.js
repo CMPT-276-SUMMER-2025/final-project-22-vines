@@ -1,5 +1,5 @@
 // Base URL for all Wger API proxy requests through backend
-const BASE_URL = 'http://localhost:5000/api/wger';
+const BASE_URL = `${process.env.REACT_APP_API_BASE_URL}/api/wger`;
 
 /**
  * @function fetchExercises

@@ -10,7 +10,7 @@ function WorkoutHistory({ phone, refreshTrigger }) {
     if (!phone) return;
     setLoading(true);
     try {
-      const res = await fetch(`http://localhost:5000/api/workoutLogs/${phone}`);
+      const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/workoutLogs/${phone}`);
       const data = await res.json();
 
       const sortedLogs = data.sort(

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+const BASE_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001';
+
 
 /**
  * UserProfile Component
@@ -32,7 +34,7 @@ function UserProfile({ onProfileLoaded }) {
     }
 
     try {
-      const response = await axios.post('http://localhost:3001/users', { name, email });
+      const response = await axios.post(`${BASE_URL}/users`, { name, email });
       setStatus(`✅ Profile loaded: ${response.data.name}`);
 
       // Pass profile data up to parent component
