@@ -20,18 +20,22 @@ const analyzeMealController = async (req, res) => {
       `https://api.edamam.com/api/nutrition-details?app_id=${process.env.EDAMAM_APP_ID}&app_key=${process.env.EDAMAM_API_KEY}`,
       { title, ingr }
     );
+    const status = edamamResponse.status;
+    if(status != 200){ //200 refers to a pass
+      throw {message: 'Failed to analyze and save meal.'};
+    }
 
     const result = edamamResponse.data;
-
     // Save response to Firestore under 'mealLogs/latestMeal'
     const docRef = db.collection('mealLogs').doc('latestMeal');
     await docRef.set({ ...result, timestamp: new Date().toISOString() });
-
+    
     res.json(result);
+    
   } catch (error) {
     console.error('Error analyzing meal:', error.message);
     res.status(500).json({ error: 'Failed to analyze and save meal.' });
-  }
+  } 
 };
 
 /**
