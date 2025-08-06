@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { analyzeMeal, getLatestMeal } from '../api/mealAPI';
 import { DIET_LABELS, checkDietCompatibility } from '../utils/dietLabels';
 import { generateNutritionTips } from '../utils/nutritionTips';
@@ -105,7 +105,7 @@ export default function MealAnalyzer() {
               inputs[inputs.length - 1].focus();
           }
       }
-  }, [tempValues.length]);
+  }, [tempValues.length, inputRef]);
 
 
   const submit = (e) => {
@@ -172,12 +172,6 @@ export default function MealAnalyzer() {
     }
   };
 
-  useEffect(() => {
-    if (activeTab === 'tips' && tips.length === 0) {
-      handleGenerateTips();
-    }
-  }, [activeTab]);
-
   /**
    aggregateNutrients: Aggregates the quantities of each nutrient across all ingredients.
    
@@ -242,11 +236,17 @@ export default function MealAnalyzer() {
   /**
    * Generates personalized nutrition tips from current nutrient profile
    */
-  const handleGenerateTips = () => {
+  const handleGenerateTips = useCallback(() => {
     if (!nutrients) return;
     const newTips = generateNutritionTips(nutrients);
     setTips(newTips);
-  };
+  }, [nutrients]);
+
+  useEffect(() => {
+    if (activeTab === 'tips' && tips.length === 0) {
+      handleGenerateTips();
+    }
+  }, [activeTab, tips.length, handleGenerateTips]);
 
   return (
     <div className="analyzeMeal">
