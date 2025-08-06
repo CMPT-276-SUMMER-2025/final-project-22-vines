@@ -5,7 +5,7 @@ import WorkoutHistory from './WorkoutHistory';
 import "../css/LogExercise.css";
 
 export default function ExerciseLogger() {
-  const [selectedExerciseName, setSelectedExerciseName] = useState('');
+  const [selectedExerciseName, ] = useState('');
   const [phone, setPhone] = useState(localStorage.getItem('phone') || null);
   const [refreshKey, setRefreshKey] = useState(0); // Used to trigger refresh in WorkoutHistory
 

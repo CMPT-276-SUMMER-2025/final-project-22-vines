@@ -12,10 +12,10 @@ import enterIcon from '../assets/buttons/enter.svg';
 import removeIcon from '../assets/buttons/remove.svg';
 
 export default function FoodLogger() {
-  const { loggedNutrients, foodLog, addMeal, resetLog, removeMeal } = useFoodLog();
+  const { loggedNutrients, foodLog, addMeal, removeMeal } = useFoodLog();
   const { trackedNutrients, goals, TARGET_NUTRIENTS } = useTrackedGoals();
   const [activeTab, setActiveTab] = useState('summary');
-  const [nutrients, setNutrients] = useState(null);
+  const [, setNutrients] = useState(null);
   const [loading, setLoading] = useState(false);
 
   
@@ -29,13 +29,14 @@ export default function FoodLogger() {
   }, [formFields]);
 
   useEffect(() => {
-      if (inputRef.current) {
-          const inputs = inputRef.current.querySelectorAll('input');
-          if (inputs.length > 0) {
-              inputs[inputs.length - 1].focus();
-          }
+    if (inputRef.current) {
+      const inputs = inputRef.current.querySelectorAll('input');
+      if (inputs.length > 0) {
+        inputs[inputs.length - 1].focus();
       }
-  }, [tempValues.length]);
+    }
+  }, [tempValues.length, inputRef]);
+
 
 
   const submit = (e) => {

@@ -41,14 +41,6 @@ const TARGET_NUTRIENTS = {
   ZN: { label: "Zinc, Zn", unit: "mg" }
 };
 
-const DEFAULT_GOALS = {
-  ENERC_KCAL: 2000,
-  PROCNT: 50,
-  CHOCDF: 250,
-  FAT: 70,
-};
-
-
 function Settings() {
   const { goals, setGoals, addTrackedNutrient, removeTrackedNutrient } = useTrackedGoals();
   const [showAdd, setShowAdd] = useState(false);
@@ -65,12 +57,6 @@ function Settings() {
                 onClick={() => setActiveTab('diet')}
             >
                 Diet Goals
-            </button>
-            <button
-                className={activeTab === 'activity' ? 'tabButton active' : 'tabButton'}
-                onClick={() => setActiveTab('activity')}
-            >
-                Activity Preferences
             </button>
         </div>
 
@@ -160,11 +146,6 @@ function Settings() {
               </div>
             )}
           </div>
-          )}
-          {activeTab === 'activity' && (
-            <div className="activityPreferences">
-            <p>Work in progress.</p>
-            </div>
           )}
         </div>
       </div>

@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 function WorkoutHistory({ phone, refreshTrigger }) {
   const [logs, setLogs] = useState([]);
   const [visible, setVisible] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [, setLoading] = useState(false);
 
   // useCallback ensures stable reference for useEffect dependencies
   const fetchLogs = useCallback(async () => {
