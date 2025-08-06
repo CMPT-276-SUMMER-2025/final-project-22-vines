@@ -60,6 +60,10 @@ How to Run Locally
 
     git clone https://github.com/CMPT-276-SUMMER-2025/final-project-22-vines.git
 
+    Install dependencies:
+
+    npm install
+
 2. Backend Setup
 
     cd backend
@@ -68,14 +72,9 @@ How to Run Locally
 
     npm install
 
-    Create a .env file in /backend with:
+    Create a .env file in /backend with. And copy paste the contents from .env file in the zipped file attached with Milestone 2 submission.
 
-    EDAMAM_APP_ID=your_edamam_app_id (Create your own)
-    EDAMAM_API_KEY=your_edamam_api_key (Create your own)
-    GOOGLE_APPLICATION_CREDENTIALS=./serviceAccountKey.json (Get this from firebase database)
-    PORT=5000
-
-    Place your Firebase service account JSON as `serviceAccountKey.json`
+    Create a JSON file as `serviceAccountKey.json` And copy paste the contents from serviceAccountKey.json the zipped file attached with Milestone 2 submission.
     
     Start the backend server:
 

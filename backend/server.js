@@ -27,6 +27,9 @@ app.use('/api/wger', wgerRoutes);
 app.use('/api/workoutLogs', workoutLogRoutes);
 app.use('/api/workouts', workoutLogRoutes); // Optional alias route
 app.use('/api/weeklyplan', weeklyPlanRoutes);
+app.get('/', (req, res) => {
+  res.send('Backend server is running!');
+});
 
 // Start the server
 app.listen(PORT, () => {
