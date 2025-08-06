@@ -24,7 +24,6 @@ const PlanDisplay = ({ weeklyPlan }) => {
 
   return (
     <div className="mt-6">
-      <h2 className="text-xl font-bold mb-4">Your 7-Day Workout Plan</h2>
 
       <table style={{ width: '100%', borderCollapse: 'collapse' }}>
         <thead>

@@ -3,6 +3,7 @@ import axios from 'axios';
 import GoalSelector from './GoalSelector';
 import PlanDisplay from './PlanDisplay';
 import { matchExercisesToGoal } from '../utils/goals';
+import printIcon from "../assets/buttons/print.svg";
 
 /**
  * WeeklyPlanGenerator Component:
@@ -70,50 +71,77 @@ const WeeklyPlanGenerator = () => {
    * Opens browser print dialog to print the workout plan
    */
   const handlePrint = () => {
-    window.print();
+    const printContents = document.getElementById('printable')?.innerHTML;
+    if (!printContents) return;
+
+    const printWindow = window.open('', '', 'height=600,width=800');
+    if (!printWindow) return;
+
+    const doc = printWindow.document;
+
+    const html = doc.createElement('html');
+    const head = doc.createElement('head');
+    const title = doc.createElement('title');
+    title.innerText = 'Workout Plan';
+    head.appendChild(title);
+
+    const body = doc.createElement('body');
+    body.innerHTML = printContents;
+
+    html.appendChild(head);
+    html.appendChild(body);
+
+    doc.documentElement.replaceWith(html);
+
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+    printWindow.close();
   };
 
   return (
-    <div>
-      {/* Goal selector dropdown */}
-      <GoalSelector
-        selectedGoal={selectedGoal}
-        setSelectedGoal={(goal) => {
-          setSelectedGoal(goal);
-          setLoading(true); // Show spinner immediately
-        }}
-      />
+    <div className="generatePlan">
+      <div className="goalSelector">
+        <h2>Select Your Plan</h2>
+        {/* Goal selector dropdown */}
+        <GoalSelector
+          selectedGoal={selectedGoal}
+          setSelectedGoal={(goal) => {
+            setSelectedGoal(goal);
+            setLoading(true); // Show spinner immediately
+          }}
+        />
+      </div>
+      
+      <div className="workoutPlanContainer">
+        <h2>Workout Plan</h2>
+        {!selectedGoal ? (
+          <p className="planPlaceholder">
+            Select a goal to generate a plan for the week.
+          </p>
+        ) : loading ? (
+          <p className="planPlaceholder">
+            Generating your training plan for the week...
+          </p>
+        ) : (
+          <>
+            {/* Show print button only when plan is generated */}
+            {weeklyPlan.length > 0 && (
+              <button className="printButton" onClick={handlePrint}>
+                <img src={printIcon} alt="Button Icon" className="buttonIcon"/>
+                Print This Plan
+              </button>
+            )}
 
-      {loading ? (
-        <p style={{ fontStyle: 'italic', padding: '1rem' }}>
-          Generating your 7-Day Training Plan...
-        </p>
-      ) : (
-        <>
-          {/* Show print button only when plan is generated */}
-          {weeklyPlan.length > 0 && (
-            <button
-              onClick={handlePrint}
-              style={{
-                margin: '1rem 0',
-                padding: '10px 20px',
-                backgroundColor: '#4CAF50',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-              }}
-            >
-              🖨️ Print This Plan
-            </button>
-          )}
-
-          {/* Display the plan */}
-          <div id="printable">
-            <PlanDisplay weeklyPlan={weeklyPlan} />
-          </div>
-        </>
-      )}
+            {/* Display the plan */}
+            <div id="printable" className="workoutPlan">
+              <PlanDisplay weeklyPlan={weeklyPlan} />
+            </div>
+          </>
+        )}
+      </div>
+      
+      <div className="rightSpacer"/>
     </div>
   );
 };

@@ -1,0 +1,119 @@
+.generatePlan {
+  padding: 2rem 5%;
+  background-color: #f8f9fa;
+  height: 90vh;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.rightSpacer {
+  width: 100%;
+  max-width: 400px;
+  margin-left: 10px;
+}
+
+/* ───── Goal Selector Form ───── */
+.goalSelector {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 400px;
+  /* max-height: 35vh; */
+  margin-right: 30px;
+}
+.goalSelector h2 {
+  margin-bottom: 1rem;
+}
+
+.goal-button-group {
+  display: flex;
+  flex-direction: column;
+  /* flex-wrap: wrap; */
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.goal-button {
+  padding: 0.5rem 1rem;
+  border: transparent;
+  border-radius: 6px;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.goal-button:hover {
+  background-color: #ccc;
+}
+
+.goal-button.active {
+  background-color: #FF6565;
+  color: white;
+  border-color: #FF6565;
+}
+
+
+/* ───── Workout Plan ───── */
+.workoutPlanContainer {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  max-width: 1000px;
+  width: 100%;
+  height: 100%;
+  max-height: 83vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.workoutPlan {
+  flex: 1;
+  overflow-y: auto;
+  margin-top: 0.75rem;
+  padding-right: 1rem;
+}
+
+.printButton {
+  margin-top: 1rem;
+  background: transparent;
+  border: none;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  width: 10rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e4e4e4;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-size: 0.875rem;
+}
+
+.printButton:hover {
+  background-color: #d4d4d4;
+}
+
+.printButton img {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  margin-right: 0.4rem;
+}
+
+/* Placeholder text */
+.planPlaceholder {
+    flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80%;
+  text-align: center;
+  color: #888;
+  font-size: 1rem;
+}

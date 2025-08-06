@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 function WorkoutHistory({ phone, refreshTrigger }) {
   const [logs, setLogs] = useState([]);
   const [visible, setVisible] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [, setLoading] = useState(false);
 
   // useCallback ensures stable reference for useEffect dependencies
   const fetchLogs = useCallback(async () => {
@@ -40,27 +40,41 @@ function WorkoutHistory({ phone, refreshTrigger }) {
   }, [phone]);
 
   return (
-    <div style={{ marginTop: '2rem' }}>
-      <button onClick={fetchLogs} disabled={!phone || loading}>
-        {loading ? 'Loading...' : 'Show Workout Logs'}
-      </button>
-
-      {visible && logs.length > 0 && (
-        <div>
-          <h3>Workout History</h3>
-          <ul>
-            {logs.map((log, index) => (
-              <li key={index}>
-                <strong>{log.exerciseName}</strong> – {log.sets} sets × {log.reps} reps @ {log.weight} lbs on{' '}
-                {new Date(log.timestamp).toLocaleString()}
-              </li>
-            ))}
-          </ul>
-        </div>
+    <div className="exerciseHistory">
+      {visible && logs.length === 0 && (
+        <p>No workouts logged yet.</p>
       )}
 
-      {visible && logs.length === 0 && <p>No workout logs found.</p>}
+      {visible && logs.length > 0 && (
+        <ul>
+          {logs.slice().map((log, index) => {
+            const datetime = new Date(log.timestamp);
+            const time = datetime.toLocaleTimeString([], {
+              hour: 'numeric',
+              minute: '2-digit',
+            });
+            const date = datetime.toLocaleDateString();
+
+            return (
+              <div key={index} className="exercise-entry">
+                <div className="exercise-header">
+                  <span className="exercise-time">{date}, {time}</span>
+                </div>
+                <div className="exercise-body">
+                  <ul>
+                    <li><strong>{log.exerciseName}</strong></li>
+                    <li>• {log.sets} sets</li>
+                    <li>• {log.reps} reps</li>
+                    <li>• {log.weight} lbs</li>
+                  </ul>
+                </div>
+              </div>
+            );
+          })}
+        </ul>
+      )}
     </div>
+
   );
 }
 

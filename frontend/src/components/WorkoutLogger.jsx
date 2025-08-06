@@ -77,9 +77,6 @@ function WorkoutLogger({ phone, selectedExerciseName, onWorkoutLogged }) {
 
   return (
     <div>
-      <h2>Workout Logger</h2>
-      <h4>Log a Workout</h4>
-
       {/* Warning message if no profile is loaded */}
       {isDisabled && (
         <p style={{ color: 'crimson' }}>
@@ -87,9 +84,9 @@ function WorkoutLogger({ phone, selectedExerciseName, onWorkoutLogged }) {
         </p>
       )}
 
-      <form onSubmit={handleSubmit}>
+      <form className="exerciseForm" onSubmit={handleSubmit}>
         <label>
-          Exercise Name:
+          Exercise Name
           <input
             type="text"
             value={exerciseName}
@@ -98,10 +95,9 @@ function WorkoutLogger({ phone, selectedExerciseName, onWorkoutLogged }) {
             placeholder="e.g., Push Ups"
           />
         </label>
-        <br />
 
         <label>
-          Sets:
+          Sets
           <input
             type="number"
             value={sets}
@@ -110,10 +106,9 @@ function WorkoutLogger({ phone, selectedExerciseName, onWorkoutLogged }) {
             min="1"
           />
         </label>
-        <br />
 
         <label>
-          Reps:
+          Reps
           <input
             type="number"
             value={reps}
@@ -122,10 +117,9 @@ function WorkoutLogger({ phone, selectedExerciseName, onWorkoutLogged }) {
             min="1"
           />
         </label>
-        <br />
 
         <label>
-          Weight (lbs):
+          Weight (lbs)
           <input
             type="number"
             value={weight}
@@ -134,10 +128,9 @@ function WorkoutLogger({ phone, selectedExerciseName, onWorkoutLogged }) {
             min="0"
           />
         </label>
-        <br />
 
         <button type="submit" disabled={isDisabled}>
-          Log Workout
+          Log Exercise
         </button>
       </form>
 

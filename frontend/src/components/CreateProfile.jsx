@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useUser } from '../contexts/UserContext';
 
 /**
  * CreateProfile Component
@@ -9,8 +10,9 @@ import React, { useState } from 'react';
  * @param {Function} onProfileCreated - Callback function after successful profile creation
  */
 function CreateProfile({ onProfileCreated }) {
-  const [phone, setPhone] = useState('');
+  const [phone, setPhoneInput] = useState('');
   const [message, setMessage] = useState('');
+  const {setPhone} = useUser();
 
   /**
    * Handles form submission:
@@ -40,6 +42,8 @@ function CreateProfile({ onProfileCreated }) {
       localStorage.setItem('phone', data.id);
       setMessage(`✅ Profile loaded: ${data.id}`);
 
+      setPhone(data.id);
+
       // Call parent callback
       if (onProfileCreated) {
         onProfileCreated(data.id);
@@ -52,31 +56,30 @@ function CreateProfile({ onProfileCreated }) {
   };
 
   return (
-    <div style={{ marginBottom: '2rem' }}>
-      <h3>Create or Load Profile</h3>
+    <div className="createProfile">
       <form onSubmit={handleSubmit}>
         <label>
-          Phone Number:{' '}
+          Phone Number
           <input
             type="tel"
             required
             value={phone}
-            onChange={(e) =>
-              setPhone(e.target.value.replace(/\D/g, '')) // Remove non-digits
-            }
+            onChange={(e) => setPhoneInput(e.target.value.replace(/\D/g, ''))} // Remove non-digits
             placeholder="Enter phone number"
           />
         </label>
-        <br />
-        <button type="submit">Continue</button>
+
+        {/* Message display after submission */}
+        {message && (
+          <p style={{ color: message.startsWith('✅') ? 'green' : 'crimson' }}>
+            {message}
+          </p>
+        )}
+
+        <button type="submit">Load</button>
       </form>
 
-      {/* Message display after submission */}
-      {message && (
-        <p style={{ color: message.startsWith('✅') ? 'green' : 'crimson' }}>
-          {message}
-        </p>
-      )}
+      
     </div>
   );
 }
