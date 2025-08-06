@@ -5,8 +5,6 @@ import { useFoodLog } from '../contexts/FoodLogContext';
 import { useTrackedGoals } from '../contexts/TrackedGoalsContext';
 import "../css/LogFood.css";
 import addIcon from '../assets/buttons/add.svg';
-import undoIcon from '../assets/buttons/undo.svg';
-import redoIcon from '../assets/buttons/redo.svg';
 import clearIcon from '../assets/buttons/clear.svg';
 import enterIcon from '../assets/buttons/enter.svg';
 import removeIcon from '../assets/buttons/remove.svg';
@@ -22,7 +20,7 @@ export default function FoodLogger() {
   // Food entry box
   const [tempValues, setTempValues] = useState(['']);
   // Undo/redo
-  const [formFields, setFormFieldsRaw, undo, redo, inputRef] = useUndoRedo([{ food: '' }], 10);
+  const [formFields, setFormFieldsRaw, inputRef] = useUndoRedo([{ food: '' }], 10);
 
   useEffect(() => {
       setTempValues(formFields.map(field => field.food || ''));
@@ -182,8 +180,6 @@ export default function FoodLogger() {
                   {loading ? 'Submitting...' : <><img src={enterIcon} alt="Submit" /> Submit</>}
                 </button>
                 <button onClick={addFields}><img src={addIcon} alt="Add" /></button>
-                <button onClick={undo}><img src={undoIcon} alt="Undo" /></button>
-                <button onClick={redo}><img src={redoIcon} alt="Redo" /></button>
                 </div>
                 <div className="right-actions">
                 <button onClick={clearAllFields}><img src={clearIcon} alt="Clear" /> Clear</button>
