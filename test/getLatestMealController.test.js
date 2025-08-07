@@ -1,33 +1,35 @@
-// Mock Firestore
+// Keep the top-level mock consistent with what your real firebase.js exports
+jest.resetModules();
 jest.mock('../backend/firebase.js', () => ({
-  collection: jest.fn(() => ({
-    doc: jest.fn(() => ({
-      get: jest.fn(),
-    })),
-  })),
+  db: {
+    collection: jest.fn(),
+  },
 }));
 
 const { getLatestMealController } = require('../backend/controllers/mealController.js');
-const { collection } = require('../backend/firebase.js');
+const firebase = require('../backend/firebase.js');
 
 describe('getLatestMealController', () => {
   let req, res, mockDocRef, mockGet;
+
   const mockDocData = { calories: 500, label: 'Pasta' };
 
-  beforeEach(() => {
-    mockGet = jest.fn();
-    mockDocRef = { get: mockGet };
+  const { db } = require('../backend/firebase.js');
 
-    collection.mockReturnValue({
-      doc: jest.fn(() => mockDocRef),
-    });
+beforeEach(() => {
+  mockGet = jest.fn();
+  mockDocRef = { get: mockGet };
 
-    req = {};
-    res = {
-      json: jest.fn(),
-      status: jest.fn(() => res),
-    };
+  db.collection.mockReturnValue({
+    doc: jest.fn(() => mockDocRef),
   });
+
+  req = {};
+  res = {
+    json: jest.fn(),
+    status: jest.fn(() => res),
+  };
+});
 
   it('should return meal data if document exists', () => {
     mockGet.mockResolvedValueOnce({
