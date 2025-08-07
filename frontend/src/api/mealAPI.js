@@ -8,7 +8,6 @@ const BASE_URL = `${process.env.REACT_APP_API_BASE_URL}/api/edamam`;
  * @returns {Object} JSON response with nutritional breakdown
  */
 export const analyzeMeal = async (mealText) => {
-  // Parse and clean ingredients
   const ingredients = mealText
     .split(',')
     .map(item => item.trim())
@@ -19,14 +18,15 @@ export const analyzeMeal = async (mealText) => {
     ingr: ingredients,
   };
 
-  // Send POST request to backend
   const res = await fetch(`${BASE_URL}/analyze`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   });
 
-  return await res.json();
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Unknown error from API');
+  return data;
 };
 
 /**
