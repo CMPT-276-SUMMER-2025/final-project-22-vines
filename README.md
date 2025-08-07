@@ -68,14 +68,14 @@ How to Run Locally
 
     cd backend
 
+    Create a .env file in /backend and copy paste the contents from .env file ithat will be in the zipped file attached with Milestone 2 submission.
+
+    Create a JSON file as `serviceAccountKey.json` And copy paste the contents from serviceAccountKey.json found in the zipped file attached with Milestone 2 submission.
+    
     Install dependencies:
 
     npm install
 
-    Create a .env file in /backend with. And copy paste the contents from .env file in the zipped file attached with Milestone 2 submission.
-
-    Create a JSON file as `serviceAccountKey.json` And copy paste the contents from serviceAccountKey.json the zipped file attached with Milestone 2 submission.
-    
     Start the backend server:
 
     node server.js
@@ -83,6 +83,11 @@ How to Run Locally
 3. Frontend Setup
 
     cd ../frontend
+
+    Create a .env file with the following content:
+
+    REACT_APP_API_BASE_URL=http://localhost:5000
+    VITE_BACKEND_URL=http://localhost:3001
 
     Install dependencies:
 
@@ -94,11 +99,6 @@ How to Run Locally
 
     The app should open at http://localhost:3000
 
-Notes
------
-- Ensure that your frontend points to the correct backend URL in mealAPI.js. For local testing:
-    const BASE_URL = 'http://localhost:5000/api/edamam';
-
 Contact
 --------
-If you have any issues setting it up, please contact the team lead
+If you have any issues setting it up, please contact the team lead.
