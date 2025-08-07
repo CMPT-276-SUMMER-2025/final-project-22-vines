@@ -74,7 +74,6 @@ export default function FoodLogger() {
       const newFields = [...formFields];
       newFields[index].food = tempValues[index];
       setFormFieldsRaw(newFields, false);
-      console.log('Committed formFields:', newFields);
   };
 
   const clearAllFields = () => {
