@@ -1,3 +1,5 @@
+// Based on https://www.youtube.com/watch?v=pR1r-1KGtNU
+
 import {useState, useEffect, useRef, useCallback} from 'react';
 
 const useUndoRedo = (initialValue, limit = 10) => {

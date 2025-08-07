@@ -1,3 +1,5 @@
+// React structure based on https://www.youtube.com/watch?v=G6D9cBaLViA
+
 import Dashboard from './pages/Dashboard'
 import LogFood from './pages/LogFood'
 import AnalyzeMeal from './pages/AnalyzeMeal'
