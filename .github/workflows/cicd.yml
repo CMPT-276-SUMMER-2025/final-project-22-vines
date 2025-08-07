@@ -36,13 +36,19 @@ jobs:
           npm install
         
         
-      - name: Build React app
-        run: npm run build
-        working-directory: ./frontend
+      - name: Install Netlify
+        run: npm install netlify-cli@17.10.1 -g
 
-      - name: Deploy to GitHub Pages
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          personal_token: ${{ secrets.PAGES_TOKEN }}
-          publish_dir: ./build
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build project
+        run: npm run build
+
+      - name: Deploy to Netlify
+        id: netlify_deploy
+        run: |
+          netlify deploy \
+            --dir build \
+            --site ${{ secrets.NETLIFY_SITE_ID }} \
+            --auth ${{ secrets.NETLIFY_API_TOKEN }}
