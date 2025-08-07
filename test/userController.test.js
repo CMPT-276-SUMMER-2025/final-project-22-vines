@@ -1,14 +1,14 @@
-jest.resetModules();
 
-// Mock Firestore behavior
-jest.mock('firebase-admin', () => ({
-  firestore: jest.fn(() => ({
-    collection: jest.fn(),
-  })),
-}));
-
-const admin = require('firebase-admin');
 const { createUser } = require('../backend/controllers/userController'); // adjust path as needed
+jest.mock('../backend/firebase.js', () => ({
+  db: {
+    collection: jest.fn(() => ({
+      doc: jest.fn(() => ({
+        set: jest.fn(),
+      })),
+    })),
+  },
+}));
 
 describe('createUser', () => {
   let req, res, mockDocRef, mockGet, mockSet;
@@ -24,11 +24,7 @@ describe('createUser', () => {
     mockCollection.mockReturnValue({
       doc: jest.fn(() => mockDocRef),
     });
-
-    admin.firestore.mockReturnValue({
-      collection: mockCollection,
-    });
-
+    
     req = {
       body: { phone: mockPhone },
     };

@@ -1,32 +1,15 @@
 const axios = require('axios');
-const { mockFirebase } = require('firestore-jest-mock');
 
 jest.mock('axios'); 
-// jest.mock('../backend/firebase.js', () => ({
-//   db: {
-//     collection: jest.fn(() => ({
-//       doc: jest.fn(() => ({
-//         set: jest.fn(),
-//       })),
-//     })),
-//   },
-// }));
-
-
-mockFirebase({
-  database: {
-    mealLogs: [
-      {
-        id: 'latestMeal',
-        value: { result: '{}' , timestamp: '01-01-2025'},
-      },
-    ],
+jest.mock('../backend/firebase.js', () => ({
+  db: {
+    collection: jest.fn(() => ({
+      doc: jest.fn(() => ({
+        set: jest.fn(),
+      })),
+    })),
   },
-});
-
-
-const { mockCollection, mockDoc } = require('firestore-jest-mock/mocks/firestore');
-
+}));
 
 let analyzeMealController;
 
@@ -76,8 +59,6 @@ describe('analyzeMealController', () => {
 
     const mealControllerResponse = await analyzeMealController(mealReq, mealRes);
 
-    const firebase = require('firebase');
-    const db = firebase.firestore();
     db.collection('mealLogs').doc('latestMeal').get().then( lastestMealDoc => {
       expect(mockCollection).toHaveBeenCalledWith('latestMeal');
     });

@@ -1,5 +1,3 @@
-
-const { mockCollection } = require('firestore-jest-mock/mocks/firestore');
 const { logWorkout, getWorkoutLogs } = require('../backend/controllers/workoutLogController.js');
 
 
@@ -8,6 +6,7 @@ const { logWorkout, getWorkoutLogs } = require('../backend/controllers/workoutLo
   let req, res;
 
   beforeEach(() => {
+    db = {};
     req = {
       body: {},
       params: {},
@@ -101,7 +100,6 @@ mockFirebase({
 });
 
     it('should return logs for a given phone number', async () => {
-      const firebase = require('firebase'); // or import firebase from 'firebase';
       const db = firebase.firestore();
 
       req.params.phone = '1234567890';
