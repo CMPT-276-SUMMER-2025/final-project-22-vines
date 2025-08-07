@@ -60,18 +60,28 @@ How to Run Locally
 
     git clone https://github.com/CMPT-276-SUMMER-2025/final-project-22-vines.git
 
+    Open a terminal in VS.
+    
     Install dependencies:
-
     npm install
+    
+    Type "cd backend" and hit enter, in order to go to the backend folder.
 
-     Create a .env file in /backend and copy paste the contents from .env file ithat will be in the zipped file attached with Milestone 2 submission.
+    After the installation create a .env file in /backend and copy paste the contents from .env file that is attached with Milestone 2 submission.
 
-    Create a JSON file as `serviceAccountKey.json` And copy paste the contents from serviceAccountKey.json found in the zipped file attached with Milestone 2 submission.
+    Note: Each Edamam API key has a limit of 10 calls. If you don't the proper results from Edamam features please contact the project manager or generate your own Edamam API keys at https://www.edamam.com.
 
-    Create a .env file with the following content:
+    Then create a JSON file as `serviceAccountKey.json` in /backend And copy paste the contents from serviceAccountKey.json file attached with Milestone 2 submission.
+
+    Then in the terminal type "cd .." and hit enter to go to the root folder.
+    Then type "cd frontend" and hit enter to go to the frontend folder.
+
+    Then create a .env file in /frontend with the following content:
 
     REACT_APP_API_BASE_URL=http://localhost:5000
     VITE_BACKEND_URL=http://localhost:3001
+
+    Then in the terminal type "cd .." and hit enter to go to the root folder again.
 
 2. Backend Setup
 
