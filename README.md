@@ -64,13 +64,18 @@ How to Run Locally
 
     npm install
 
+     Create a .env file in /backend and copy paste the contents from .env file ithat will be in the zipped file attached with Milestone 2 submission.
+
+    Create a JSON file as `serviceAccountKey.json` And copy paste the contents from serviceAccountKey.json found in the zipped file attached with Milestone 2 submission.
+
+    Create a .env file with the following content:
+
+    REACT_APP_API_BASE_URL=http://localhost:5000
+    VITE_BACKEND_URL=http://localhost:3001
+
 2. Backend Setup
 
     cd backend
-
-    Create a .env file in /backend and copy paste the contents from .env file ithat will be in the zipped file attached with Milestone 2 submission.
-
-    Create a JSON file as `serviceAccountKey.json` And copy paste the contents from serviceAccountKey.json found in the zipped file attached with Milestone 2 submission.
     
     Install dependencies:
 
@@ -83,11 +88,6 @@ How to Run Locally
 3. Frontend Setup
 
     cd ../frontend
-
-    Create a .env file with the following content:
-
-    REACT_APP_API_BASE_URL=http://localhost:5000
-    VITE_BACKEND_URL=http://localhost:3001
 
     Install dependencies:
 
