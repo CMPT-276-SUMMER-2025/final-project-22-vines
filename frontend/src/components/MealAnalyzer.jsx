@@ -1,3 +1,5 @@
+// Dynamic form based on https://www.youtube.com/watch?v=LcAyJRlvh8Y
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { analyzeMeal, getLatestMeal } from '../api/mealAPI';
 import { DIET_LABELS, checkDietCompatibility } from '../utils/dietLabels';
