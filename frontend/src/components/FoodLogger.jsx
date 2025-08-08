@@ -1,7 +1,5 @@
-// Dynamic form based on https://www.youtube.com/watch?v=LcAyJRlvh8Y
-
 import React, { useState, useEffect } from 'react';
-import { analyzeMeal, getLatestMeal } from '../api/mealAPI';
+import { analyzeMeal } from '../api/mealAPI';
 import useUndoRedo from '../hooks';
 import { useFoodLog } from '../contexts/FoodLogContext';
 import { useTrackedGoals } from '../contexts/TrackedGoalsContext';
@@ -10,24 +8,24 @@ import addIcon from '../assets/buttons/add.svg';
 import clearIcon from '../assets/buttons/clear.svg';
 import enterIcon from '../assets/buttons/enter.svg';
 import removeIcon from '../assets/buttons/remove.svg';
-
+/**
+ * FoodLogger
+ * A React component that allows the user to input meals, analyze them using the Edamam API,
+ * and log them into a summary and history UI. Nutrients are aggregated and stored per meal.
+ */
 export default function FoodLogger() {
   const { loggedNutrients, foodLog, addMeal, removeMeal } = useFoodLog();
   const { trackedNutrients, goals, TARGET_NUTRIENTS } = useTrackedGoals();
   const [activeTab, setActiveTab] = useState('summary');
   const [, setNutrients] = useState(null);
   const [loading, setLoading] = useState(false);
-
-  
-  // Food entry box
   const [tempValues, setTempValues] = useState(['']);
-  // Undo/redo
   const [formFields, setFormFieldsRaw, inputRef] = useUndoRedo([{ food: '' }], 10);
-
+  // Update temp UI fields whenever the undo-redo stack changes
   useEffect(() => {
-      setTempValues(formFields.map(field => field.food || ''));
+    setTempValues(formFields.map(field => field.food || ''));
   }, [formFields]);
-
+  // Focus the last input when fields change
   useEffect(() => {
     if (inputRef.current) {
       const inputs = inputRef.current.querySelectorAll('input');
@@ -36,90 +34,84 @@ export default function FoodLogger() {
       }
     }
   }, [tempValues.length, inputRef]);
-
-
-
   const submit = (e) => {
     e.preventDefault();
-    handleAnalyze(formFields);
-    // setActiveTab('summary'); // default tab after saving
+    handleAnalyze();
   };
-
+  /**
+   * Adds a new empty field for food input.
+   */
   const addFields = () => {
-      const newFormFields = [...formFields, { food: '' }];
-      const newTempValues = [...tempValues, ''];
-
-      // First update formFields (pushes to undo history)
-      setFormFieldsRaw(newFormFields, true);
-
-      // Then update UI-only tempValues
-      setTempValues(newTempValues);
+    setFormFieldsRaw([...formFields, { food: '' }], true);
+    setTempValues([...tempValues, '']);
   };
-
+  /**
+   * Removes a field by index from both UI and state.
+   * @param {number} index
+   */
   const removeFields = (index) => {
-      const updatedFields = [...formFields];
-      const updatedTemps = [...tempValues];
-      updatedFields.splice(index, 1);
-      updatedTemps.splice(index, 1);
-      setFormFieldsRaw(updatedFields, true);
-      setTempValues(updatedTemps);
-  }
-
+    const updatedFields = [...formFields];
+    const updatedTemps = [...tempValues];
+    updatedFields.splice(index, 1);
+    updatedTemps.splice(index, 1);
+    setFormFieldsRaw(updatedFields, true);
+    setTempValues(updatedTemps);
+  };
+  /**
+   * Handles UI input change.
+   * @param {number} index
+   * @param {string} value
+   */
   const handleChange = (index, value) => {
-      const newTemps = [...tempValues];
-      newTemps[index] = value;
-      setTempValues(newTemps);
+    const newTemps = [...tempValues];
+    newTemps[index] = value;
+    setTempValues(newTemps);
   };
-
-  // Blur
+  /**
+   * Updates internal state when input field loses focus.
+   * @param {number} index
+   */
   const handleBlur = (index) => {
-      const newFields = [...formFields];
-      newFields[index].food = tempValues[index];
-      setFormFieldsRaw(newFields, false);
+    const newFields = [...formFields];
+    newFields[index].food = tempValues[index];
+    setFormFieldsRaw(newFields, false);
   };
-
+  /**
+   * Clears all fields if non-empty.
+   */
   const clearAllFields = () => {
-      if (formFields.length === 1 && formFields[0].food === '') return;
-
-      setFormFieldsRaw([{food: ''}], true);
-      setTempValues(['']);
+    if (formFields.length === 1 && formFields[0].food === '') return;
+    setFormFieldsRaw([{ food: '' }], true);
+    setTempValues(['']);
   };
-
+  /**
+   * Handles Enter and comma keys to auto-create new input field.
+   */
   const handleKeyDown = (e, index) => {
     if (e.key === 'Enter' || e.key === ',') {
-      e.preventDefault(); // Prevent newline or comma from appearing
+      e.preventDefault();
       const currentValue = tempValues[index].trim();
-
       if (currentValue !== '') {
-        handleBlur(index);   // Optionally save the current input
-        addFields();         // Create a new field
+        handleBlur(index);
+        addFields();
         setTimeout(() => {
-          // Focus the new input (next index)
           const nextInput = inputRef.current?.querySelectorAll('input')[index + 1];
           nextInput?.focus();
         }, 0);
       }
     }
   };
-
   /**
-   aggregateNutrients: Aggregates the quantities of each nutrient across all ingredients.
-   
-   INPUT:
-   ingredients (array): An array of ingredient objects from Edamam
-   
-   OUTPUT:
-   totals (object): A map of nutrient codes to total quantities
+   * Aggregates nutrient values across all ingredients returned by the Edamam API.
+   * @param {Array} ingredients - Edamam ingredient array
+   * @returns {Object} totals - Object mapping nutrient codes to totals
    */
   const aggregateNutrients = (ingredients) => {
     const totals = {};
-
-    // Initialize totals for all target nutrients to 0
     for (const code of Object.keys(TARGET_NUTRIENTS)) {
       totals[code] = 0;
     }
-
-    // Loop through each ingredient and accumulate its nutrient values
+    // For each ingredient, sum all its known nutrients
     ingredients.forEach(ing => {
       const parsed = ing?.parsed?.[0]?.nutrients || {};
       for (const code of Object.keys(TARGET_NUTRIENTS)) {
@@ -128,175 +120,156 @@ export default function FoodLogger() {
         }
       }
     });
-
     return totals;
   };
-
   /**
-   handleAnalyze
-   Sends the meal to the backend for analysis and updates state with the results.
+   * Sends the meal to the backend for analysis and stores the result in context state.
    */
   const handleAnalyze = async () => {
-    if (loading) return; // Prevent multiple rapid clicks
-
+    if (loading) return;
     const combinedInput = formFields.map(f => f.food.trim()).filter(Boolean).join(', ');
     if (!combinedInput) return alert("Please enter some foods.");
-
     try {
       setLoading(true);
-
-      await analyzeMeal(combinedInput);
-      const latest = await getLatestMeal();
-      const totals = aggregateNutrients(latest.ingredients);
+      const response = await analyzeMeal(combinedInput);
+      if (!response || !Array.isArray(response.ingredients)) {
+        alert("Please enter a valid meal with correct syntax.");
+        return;
+      }
+      const totals = aggregateNutrients(response.ingredients);
       setNutrients(totals);
-
       addMeal({
         timestamp: new Date().toISOString(),
         items: formFields.map(f => f.food.trim()).filter(Boolean),
         nutrients: totals
       });
-
-      // Clear input after successful log
       setFormFieldsRaw([{ food: '' }], true);
       setTempValues(['']);
-
     } catch (error) {
-      console.error("Error analyzing meal:", error);
-      alert("Failed to analyze meal. Please try again.");
+      setNutrients(null);
+      alert(error.message || "Failed to analyze meal. Please try again.");
     } finally {
       setLoading(false);
     }
   };
-
-
   return (
     <div className="logFood">
-        <div className='foodEntryContainer'>
+      {/* Input section */}
+      <div className='foodEntryContainer'>
         <h2>Enter Your Meal</h2>
-        {/* Input field for user to type in ingredients */}
         <div className='foodEntryBox'>
-            <div className="toolbar">
-                <div className="left-actions">
-                <button onClick={submit} disabled={loading}>
-                  {loading ? 'Submitting...' : <><img src={enterIcon} alt="Submit" /> Submit</>}
-                </button>
-                <button onClick={addFields}><img src={addIcon} alt="Add" /></button>
+          <div className="toolbar">
+            <div className="left-actions">
+              <button onClick={submit} disabled={loading}>
+                {loading ? 'Submitting...' : <><img src={enterIcon} alt="Submit" /> Submit</>}
+              </button>
+              <button onClick={addFields}><img src={addIcon} alt="Add" /></button>
+            </div>
+            <div className="right-actions">
+              <button onClick={clearAllFields}><img src={clearIcon} alt="Clear" /> Clear</button>
+            </div>
+          </div>
+          <div className='foodEntries'>
+            <form onSubmit={submit} ref={inputRef}>
+              {formFields.map((_, index) => (
+                <div key={index} className='foodEntry'>
+                  <input
+                    name="food"
+                    placeholder="Enter food"
+                    value={tempValues[index]}
+                    onChange={(e) => handleChange(index, e.target.value)}
+                    onBlur={() => handleBlur(index)}
+                    onKeyDown={(e) => handleKeyDown(e, index)}
+                  />
+                  <button type="button" onClick={() => removeFields(index)} className='removeBtn'>
+                    <img src={removeIcon} alt="Remove" className="buttonIcon"/>
+                  </button>
                 </div>
-                <div className="right-actions">
-                <button onClick={clearAllFields}><img src={clearIcon} alt="Clear" /> Clear</button>
-                </div>
-            </div>
-            <div className='foodEntries'>
-                <form onSubmit={submit} ref={inputRef}>
-                {formFields.map((_, index) => (
-                    <div key={index} className='foodEntry'>
-                        <input
-                            name="food"
-                            placeholder="Enter food"
-                            value={tempValues[index]}
-                            onChange={(e) => handleChange(index, e.target.value)}
-                            onBlur={() => handleBlur(index)}
-                            onKeyDown={(e) => handleKeyDown(e, index)}
-                        />
-                        <button type="button" onClick={() => removeFields(index)} className='removeBtn'><img src={removeIcon} alt="Button Icon" className="buttonIcon"/></button>
-                    </div>
-                ))}
-                </form>
-            </div>
+              ))}
+            </form>
+          </div>
         </div>
+      </div>
+      {/* Results section */}
+      <div className='logFoodContainer'>
+        <h2>Logged Information</h2>
+        <div className="tabSwitcher">
+          <button className={activeTab === 'summary' ? 'active' : ''} onClick={() => setActiveTab('summary')}>
+            Nutrition Summary
+          </button>
+          <button className={activeTab === 'history' ? 'active' : ''} onClick={() => setActiveTab('history')}>
+            Meal History
+          </button>
         </div>
-
-        <div className='logFoodContainer'>
-            <h2>Logged Information</h2>
-        
-            <div className="tabSwitcher">
-                <button
-                className={activeTab === 'summary' ? 'active' : ''}
-                onClick={() => setActiveTab('summary')}
-                >
-                Nutrition Summary
-                </button>
-                <button
-                className={activeTab === 'history' ? 'active' : ''}
-                onClick={() => setActiveTab('history')}
-                >
-                Meal History
-                </button>
-            </div>
-            
-            <div className="tabContent">
-                {activeTab === 'summary' && (
-                    <div className="summaryCard">
-                        {trackedNutrients.map(code => {
-                          const label = TARGET_NUTRIENTS[code]?.label || code;
-                          const unit = TARGET_NUTRIENTS[code]?.unit || '';
-                          const current = Math.round(loggedNutrients[code] || 0);
-                          const goal = goals[code];
-
-                          const ratio = goal ? current / goal : 0;
-                          const progressPercent = Math.min(100, Math.round(ratio * 100));
-
-                          return (
-                            <div key={code} className="nutrient-row">
-                              <div className="nutrient-labels">
-                                <span>{label}</span>
-                                <span>{current}{unit && ` ${unit}`} / {goal}{unit && ` ${unit}`}</span>
-                              </div>
-                              <div className="progress-container">
-                                <div
-                                  className={`progress-bar ${
-                                    progressPercent >= 100 ? 'progress-green' :
-                                    progressPercent >= 75  ? 'progress-palegreen' :
-                                    progressPercent >= 50  ? 'progress-yellow' :
-                                    progressPercent >= 25  ? 'progress-orange' :
-                                                            'progress-red'
-                                  }`}
-                                  style={{ width: `${progressPercent}%` }}
-                                />
-                              </div>
-                            </div>
-                          );
-                        })}
+        <div className="tabContent">
+          {/* Nutrition Summary */}
+          {activeTab === 'summary' && (
+            <div className="summaryCard">
+              {trackedNutrients.map(code => {
+                const label = TARGET_NUTRIENTS[code]?.label || code;
+                const unit = TARGET_NUTRIENTS[code]?.unit || '';
+                const current = Math.round(loggedNutrients[code] || 0);
+                const goal = goals[code];
+                const ratio = goal ? current / goal : 0;
+                const progressPercent = Math.min(100, Math.round(ratio * 100));
+                return (
+                  <div key={code} className="nutrient-row">
+                    <div className="nutrient-labels">
+                      <span>{label}</span>
+                      <span>{current}{unit && ` ${unit}`} / {goal}{unit && ` ${unit}`}</span>
                     </div>
-                )}
-
-                {activeTab === 'history' && (
-                    <div className="historyCard">
-                        {foodLog.length === 0 ? (
-                        <p>No meals logged yet.</p>
-                        ) : (
-                        <ul>
-                          {foodLog.slice().reverse().map((entry, index) => {
-                            const time = new Date(entry.timestamp).toLocaleTimeString([], {
-                              hour: 'numeric',
-                              minute: '2-digit',
-                            });
-
-                            return (
-                              <div key={entry.timestamp} className="meal-entry">
-                                <div className="meal-header">
-                                  <span className="meal-time">{time}</span>
-                                  <button className="delete-meal" onClick={() => removeMeal(entry.timestamp)}>×</button>
-                                </div>
-                                <div className="meal-body">
-                                  <ul>
-                                    {entry.items.map((item, i) => (
-                                      <li key={i}>• {item}</li>
-                                    ))}
-                                  </ul>
-                                </div>
-                              </div>
-                            );
-                          })}
-
-                        </ul>
-                        )}
+                    <div className="progress-container">
+                      <div
+                        className={`progress-bar ${
+                          progressPercent >= 100 ? 'progress-green' :
+                          progressPercent >= 75  ? 'progress-palegreen' :
+                          progressPercent >= 50  ? 'progress-yellow' :
+                          progressPercent >= 25  ? 'progress-orange' :
+                                                  'progress-red'
+                        }`}
+                        style={{ width: `${progressPercent}%` }}
+                      />
                     </div>
-                )}
+                  </div>
+                );
+              })}
             </div>
+          )}
+          {/* Meal History */}
+          {activeTab === 'history' && (
+            <div className="historyCard">
+              {foodLog.length === 0 ? (
+                <p>No meals logged yet.</p>
+              ) : (
+                <ul>
+                  {foodLog.slice().reverse().map((entry) => {
+                    const time = new Date(entry.timestamp).toLocaleTimeString([], {
+                      hour: 'numeric',
+                      minute: '2-digit',
+                    });
+                    return (
+                      <div key={entry.timestamp} className="meal-entry">
+                        <div className="meal-header">
+                          <span className="meal-time">{time}</span>
+                          <button className="delete-meal" onClick={() => removeMeal(entry.timestamp)}>×</button>
+                        </div>
+                        <div className="meal-body">
+                          <ul>
+                            {entry.items.map((item, i) => (
+                              <li key={i}>• {item}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </ul>
+              )}
+            </div>
+          )}
         </div>
-
-        <div className="rightSpacer"/>
+      </div>
+      <div className="rightSpacer" />
     </div>
   );
 }
