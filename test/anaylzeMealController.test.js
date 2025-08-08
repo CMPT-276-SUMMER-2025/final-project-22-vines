@@ -1,15 +1,7 @@
 const axios = require('axios');
 
 jest.mock('axios'); 
-jest.mock('../backend/firebase.js', () => ({
-  db: {
-    collection: jest.fn(() => ({
-      doc: jest.fn(() => ({
-        set: jest.fn(),
-      })),
-    })),
-  },
-}));
+
 
 let analyzeMealController;
 
@@ -19,7 +11,7 @@ beforeEach(() => {
 });
 
 describe('analyzeMealController', () => {
-  const mealReq = {
+  let mealReq = {
     body: {
       title: 'Pasta Dinner',
       ingr: ['1 cup pasta', '2 tbsp olive oil', '1 tsp salt'],
@@ -49,11 +41,11 @@ describe('analyzeMealController', () => {
   };
 
   it('should return 500 on error', async () => {
-    axios.post = jest.fn().mockRejectedValue({status: 401});
 
+    axios.post = jest.fn().mockRejectedValue({status: 401});
     await analyzeMealController(mealReq, mealRes);
 
     expect(mealRes.status()).toBe(500);
-    expect(mealRes.json().error).toMatch(/Failed to analyze and save meal./);
+    expect(mealRes.json().error).toMatch('Something went wrong while analyzing your meal. Please try again.');
   });
 });
