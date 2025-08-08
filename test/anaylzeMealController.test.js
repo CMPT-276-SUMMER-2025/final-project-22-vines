@@ -1,16 +1,6 @@
 const axios = require('axios');
 
 jest.mock('axios'); 
-jest.mock('../backend/firebase.js', () => ({
-  db: {
-    collection: jest.fn(() => ({
-      doc: jest.fn(() => ({
-        set: jest.fn(),
-      })),
-    })),
-  },
-}));
-
 let analyzeMealController;
 
 beforeEach(() => {
@@ -56,4 +46,5 @@ describe('analyzeMealController', () => {
     expect(mealRes.status()).toBe(500);
     expect(mealRes.json().error).toMatch(/Failed to analyze and save meal./);
   });
+
 });
