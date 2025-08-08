@@ -25,16 +25,14 @@ jobs:
           cd ./backend
           npm install
 
-
-      - name: Run tests
-        run: npm install --save-dev jest
-             npm test
-
       - name: Install Frontend dependencies
         run: |
           cd ./frontend
           npm install
-        
+
+      - name: Run tests
+        run: npm install --save-dev jest
+             npm test
         
       - name: Install Netlify
         run: npm install netlify-cli@17.10.1 -g
