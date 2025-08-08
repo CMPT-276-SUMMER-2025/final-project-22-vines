@@ -9,6 +9,7 @@ import clearIcon from '../assets/buttons/clear.svg';
 import enterIcon from '../assets/buttons/enter.svg';
 import removeIcon from '../assets/buttons/remove.svg';
 
+// Nutrients we care about, with labels and units for display
 const TARGET_NUTRIENTS = {
   "SUGAR.added": { label: "Added sugar", unit: "g" },
   CA: { label: "Calcium, Ca", unit: "mg" },
@@ -37,10 +38,12 @@ export default function MealAnalyzer() {
   const [tips, setTips] = useState([]);
   const [activeTab, setActiveTab] = useState('');
 
+  // Sync UI-only values with stored form fields
   useEffect(() => {
     setTempValues(formFields.map(field => field.food || ''));
   }, [formFields]);
 
+  // Automatically focus the last input
   useEffect(() => {
     if (inputRef.current) {
       const inputs = inputRef.current.querySelectorAll('input');
@@ -57,10 +60,8 @@ export default function MealAnalyzer() {
   };
 
   const addFields = () => {
-    const newFormFields = [...formFields, { food: '' }];
-    const newTempValues = [...tempValues, ''];
-    setFormFieldsRaw(newFormFields, true);
-    setTempValues(newTempValues);
+    setFormFieldsRaw([...formFields, { food: '' }], true);
+    setTempValues([...tempValues, '']);
   };
 
   const removeFields = (index) => {
@@ -105,13 +106,18 @@ export default function MealAnalyzer() {
     }
   };
 
+  /**
+   * Aggregates the total nutrient values across all parsed ingredients.
+   * @param {Array} ingredients - Edamam's response ingredient array
+   * @returns {Object} - Totals of each nutrient
+   */
   const aggregateNutrients = (ingredients) => {
     const totals = {};
     for (const code of Object.keys(TARGET_NUTRIENTS)) {
       totals[code] = 0;
     }
 
-    ingredients.forEach(ing => {
+    ingredients.forEach((ing) => {
       const parsed = ing?.parsed?.[0]?.nutrients || {};
       for (const code of Object.keys(TARGET_NUTRIENTS)) {
         if (parsed[code]) {
@@ -123,6 +129,9 @@ export default function MealAnalyzer() {
     return totals;
   };
 
+  /**
+   * Sends ingredients to backend, fetches results, updates UI and nutrient state.
+   */
   const handleAnalyze = async () => {
     const combinedInput = formFields.map(f => f.food.trim()).filter(Boolean).join(', ');
     if (!combinedInput) {
@@ -132,15 +141,12 @@ export default function MealAnalyzer() {
 
     try {
       const responseData = await analyzeMeal(combinedInput);
-console.log("Edamam response:", responseData); // testing
-
 
       if (!responseData || !Array.isArray(responseData.ingredients)) {
-  setNutrients(null);
-  alert('Please enter a valid meal with correct syntax.');
-  return;
-}
-
+        setNutrients(null);
+        alert('Please enter a valid meal with correct syntax.');
+        return;
+      }
 
       const latest = await getLatestMeal();
 
@@ -155,7 +161,6 @@ console.log("Edamam response:", responseData); // testing
       setTips([]);
     } catch (err) {
       setNutrients(null);
-      console.error('Meal analysis failed:', err);
       alert(err.message || 'An error occurred while analyzing the meal.');
     }
   };
@@ -180,6 +185,7 @@ console.log("Edamam response:", responseData); // testing
 
   return (
     <div className="analyzeMeal">
+      {/* Input section */}
       <div className='foodEntryContainer'>
         <h2>Enter Your Meal</h2>
         <div className='foodEntryBox'>
@@ -214,6 +220,7 @@ console.log("Edamam response:", responseData); // testing
         </div>
       </div>
 
+      {/* Analysis Results */}
       <div className='analysisResultsContainer'>
         <h2>Meal Analysis</h2>
         <div className="tabSwitcher">
@@ -252,9 +259,17 @@ console.log("Edamam response:", responseData); // testing
                   </table>
                 </div>
               )}
+
               {activeTab === 'compatibility' && (
                 <div>
-                  <select className='dietSelect' value={selectedLabel} onChange={(e) => { setSelectedLabel(e.target.value); setCompatibilityResult(null); }}>
+                  <select
+                    className='dietSelect'
+                    value={selectedLabel}
+                    onChange={(e) => {
+                      setSelectedLabel(e.target.value);
+                      setCompatibilityResult(null);
+                    }}
+                  >
                     <option value="">Select a diet</option>
                     {DIET_LABELS.map(label => (
                       <option key={label} value={label}>{label}</option>
@@ -270,6 +285,7 @@ console.log("Edamam response:", responseData); // testing
                   )}
                 </div>
               )}
+
               {activeTab === 'tips' && (
                 <div>
                   <ul>

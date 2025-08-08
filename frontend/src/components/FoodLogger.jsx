@@ -1,5 +1,3 @@
-// Dynamic form based on https://www.youtube.com/watch?v=LcAyJRlvh8Y
-
 import React, { useState, useEffect } from 'react';
 import { analyzeMeal } from '../api/mealAPI';
 import useUndoRedo from '../hooks';
@@ -11,20 +9,27 @@ import clearIcon from '../assets/buttons/clear.svg';
 import enterIcon from '../assets/buttons/enter.svg';
 import removeIcon from '../assets/buttons/remove.svg';
 
+/**
+ * FoodLogger
+ * A React component that allows the user to input meals, analyze them using the Edamam API,
+ * and log them into a summary and history UI. Nutrients are aggregated and stored per meal.
+ */
 export default function FoodLogger() {
   const { loggedNutrients, foodLog, addMeal, removeMeal } = useFoodLog();
   const { trackedNutrients, goals, TARGET_NUTRIENTS } = useTrackedGoals();
+
   const [activeTab, setActiveTab] = useState('summary');
   const [, setNutrients] = useState(null);
   const [loading, setLoading] = useState(false);
-
   const [tempValues, setTempValues] = useState(['']);
   const [formFields, setFormFieldsRaw, inputRef] = useUndoRedo([{ food: '' }], 10);
 
+  // Update temp UI fields whenever the undo-redo stack changes
   useEffect(() => {
-      setTempValues(formFields.map(field => field.food || ''));
+    setTempValues(formFields.map(field => field.food || ''));
   }, [formFields]);
 
+  // Focus the last input when fields change
   useEffect(() => {
     if (inputRef.current) {
       const inputs = inputRef.current.querySelectorAll('input');
@@ -39,13 +44,18 @@ export default function FoodLogger() {
     handleAnalyze();
   };
 
+  /**
+   * Adds a new empty field for food input.
+   */
   const addFields = () => {
-    const newFormFields = [...formFields, { food: '' }];
-    const newTempValues = [...tempValues, ''];
-    setFormFieldsRaw(newFormFields, true);
-    setTempValues(newTempValues);
+    setFormFieldsRaw([...formFields, { food: '' }], true);
+    setTempValues([...tempValues, '']);
   };
 
+  /**
+   * Removes a field by index from both UI and state.
+   * @param {number} index
+   */
   const removeFields = (index) => {
     const updatedFields = [...formFields];
     const updatedTemps = [...tempValues];
@@ -55,24 +65,39 @@ export default function FoodLogger() {
     setTempValues(updatedTemps);
   };
 
+  /**
+   * Handles UI input change.
+   * @param {number} index
+   * @param {string} value
+   */
   const handleChange = (index, value) => {
     const newTemps = [...tempValues];
     newTemps[index] = value;
     setTempValues(newTemps);
   };
 
+  /**
+   * Updates internal state when input field loses focus.
+   * @param {number} index
+   */
   const handleBlur = (index) => {
     const newFields = [...formFields];
     newFields[index].food = tempValues[index];
     setFormFieldsRaw(newFields, false);
   };
 
+  /**
+   * Clears all fields if non-empty.
+   */
   const clearAllFields = () => {
     if (formFields.length === 1 && formFields[0].food === '') return;
     setFormFieldsRaw([{ food: '' }], true);
     setTempValues(['']);
   };
 
+  /**
+   * Handles Enter and comma keys to auto-create new input field.
+   */
   const handleKeyDown = (e, index) => {
     if (e.key === 'Enter' || e.key === ',') {
       e.preventDefault();
@@ -88,11 +113,18 @@ export default function FoodLogger() {
     }
   };
 
+  /**
+   * Aggregates nutrient values across all ingredients returned by the Edamam API.
+   * @param {Array} ingredients - Edamam ingredient array
+   * @returns {Object} totals - Object mapping nutrient codes to totals
+   */
   const aggregateNutrients = (ingredients) => {
     const totals = {};
     for (const code of Object.keys(TARGET_NUTRIENTS)) {
       totals[code] = 0;
     }
+
+    // For each ingredient, sum all its known nutrients
     ingredients.forEach(ing => {
       const parsed = ing?.parsed?.[0]?.nutrients || {};
       for (const code of Object.keys(TARGET_NUTRIENTS)) {
@@ -101,9 +133,13 @@ export default function FoodLogger() {
         }
       }
     });
+
     return totals;
   };
 
+  /**
+   * Sends the meal to the backend for analysis and stores the result in context state.
+   */
   const handleAnalyze = async () => {
     if (loading) return;
 
@@ -131,10 +167,8 @@ export default function FoodLogger() {
 
       setFormFieldsRaw([{ food: '' }], true);
       setTempValues(['']);
-
     } catch (error) {
       setNutrients(null);
-      console.error("Error analyzing meal:", error);
       alert(error.message || "Failed to analyze meal. Please try again.");
     } finally {
       setLoading(false);
@@ -143,6 +177,7 @@ export default function FoodLogger() {
 
   return (
     <div className="logFood">
+      {/* Input section */}
       <div className='foodEntryContainer'>
         <h2>Enter Your Meal</h2>
         <div className='foodEntryBox'>
@@ -170,7 +205,7 @@ export default function FoodLogger() {
                     onKeyDown={(e) => handleKeyDown(e, index)}
                   />
                   <button type="button" onClick={() => removeFields(index)} className='removeBtn'>
-                    <img src={removeIcon} alt="Button Icon" className="buttonIcon"/>
+                    <img src={removeIcon} alt="Remove" className="buttonIcon"/>
                   </button>
                 </div>
               ))}
@@ -179,23 +214,20 @@ export default function FoodLogger() {
         </div>
       </div>
 
+      {/* Results section */}
       <div className='logFoodContainer'>
         <h2>Logged Information</h2>
         <div className="tabSwitcher">
-          <button
-            className={activeTab === 'summary' ? 'active' : ''}
-            onClick={() => setActiveTab('summary')}
-          >
+          <button className={activeTab === 'summary' ? 'active' : ''} onClick={() => setActiveTab('summary')}>
             Nutrition Summary
           </button>
-          <button
-            className={activeTab === 'history' ? 'active' : ''}
-            onClick={() => setActiveTab('history')}
-          >
+          <button className={activeTab === 'history' ? 'active' : ''} onClick={() => setActiveTab('history')}>
             Meal History
           </button>
         </div>
+
         <div className="tabContent">
+          {/* Nutrition Summary */}
           {activeTab === 'summary' && (
             <div className="summaryCard">
               {trackedNutrients.map(code => {
@@ -230,6 +262,7 @@ export default function FoodLogger() {
             </div>
           )}
 
+          {/* Meal History */}
           {activeTab === 'history' && (
             <div className="historyCard">
               {foodLog.length === 0 ? (
@@ -265,7 +298,7 @@ export default function FoodLogger() {
         </div>
       </div>
 
-      <div className="rightSpacer"/>
+      <div className="rightSpacer" />
     </div>
   );
 }
